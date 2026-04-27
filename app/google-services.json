@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "341260680696",
+    "project_id": "apexpay-8d505",
+    "storage_bucket": "apexpay-8d505.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341260680696:android:759a54806017604bac2a0d",
+        "android_client_info": {
+          "package_name": "com.apexpay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJZI96lK5oJsCwp31NROf6eIspZ9FGzyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
