@@ -81,7 +81,7 @@ com.apexpay/
 
 1. Clone the repo:
    ```
-   git clone https://github.com/your-username/apex-pay.git
+   git clone https://github.com/Moeeeeed/apex-pay.git
    ```
 
 2. Open the project in Android Studio and let Gradle sync.
@@ -94,8 +94,8 @@ com.apexpay/
 
 4. Add your API keys to `local.properties`:
    ```
-   MARKET_API_KEY=your_key_here
-   LLM_API_KEY=your_key_here
+   MARKET_API_KEY=...
+   LLM_API_KEY=....
    ```
 
 5. Connect a device or start an emulator, then hit Run.
