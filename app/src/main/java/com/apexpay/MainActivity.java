@@ -1,58 +1,55 @@
 package com.apexpay;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.apexpay.fragments.AiFragment;
+import com.apexpay.fragments.BrokerageFragment;
+import com.apexpay.fragments.HomeFragment;
+import com.apexpay.fragments.ProfileFragment;
+import com.apexpay.fragments.WalletFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        String email = getIntent().getStringExtra("userEmail");
-        if (email == null) {
+        userEmail = getIntent().getStringExtra("userEmail");
+        if (userEmail == null) {
             SharedPreferences prefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
-            email = prefs.getString("userEmail", "");
+            userEmail = prefs.getString("userEmail", "");
         }
 
-        TextView tvWelcome = findViewById(R.id.tvWelcome);
-        Button   btnLogout = findViewById(R.id.btnLogout);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home)      return loadFragment(HomeFragment.newInstance(userEmail));
+            if (id == R.id.nav_wallet)    return loadFragment(new WalletFragment());
+            if (id == R.id.nav_brokerage) return loadFragment(new BrokerageFragment());
+            if (id == R.id.nav_ai)        return loadFragment(new AiFragment());
+            if (id == R.id.nav_profile)   return loadFragment(ProfileFragment.newInstance(userEmail));
+            return false;
+        });
 
-        tvWelcome.setText("Welcome,\n" + email);
-
-        btnLogout.setOnClickListener(v -> confirmLogout());
+        if (savedInstanceState == null) {
+            loadFragment(HomeFragment.newInstance(userEmail));
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
     }
 
-    private void confirmLogout() {
-        new AlertDialog.Builder(this)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Logout", (dialog, which) -> performLogout())
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void performLogout() {
-        mAuth.signOut();
-
-        SharedPreferences prefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
-        prefs.edit().clear().apply();
-
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+    private boolean loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+        return true;
     }
 }
