@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apexpay.R;
+import com.apexpay.MainActivity;
 import com.apexpay.adapters.TransactionAdapter;
 import com.apexpay.models.Transaction;
 
@@ -46,8 +47,22 @@ public class HomeFragment extends Fragment {
         tvGreeting.setText(getGreeting());
         tvUserName.setText(capitalize(name));
 
+        setupQuickActions(view);
         setupTransactions(view);
         return view;
+    }
+
+    private void setupQuickActions(View view) {
+        view.findViewById(R.id.btnSend).setOnClickListener(v -> navigateTo(new SendMoneyFragment()));
+        view.findViewById(R.id.btnReceive).setOnClickListener(v -> navigateTo(new ReceiveMoneyFragment()));
+        view.findViewById(R.id.btnTopUp).setOnClickListener(v -> navigateTo(new TopUpFragment()));
+        view.findViewById(R.id.btnScan).setOnClickListener(v -> navigateTo(new TransactionHistoryFragment())); // Using TransactionHistory for Scan placeholder
+    }
+
+    private void navigateTo(Fragment fragment) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).loadFragment(fragment);
+        }
     }
 
     private void setupTransactions(View view) {
