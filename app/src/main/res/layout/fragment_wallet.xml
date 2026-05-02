@@ -3,64 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="#0D0F1A"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingBottom="24dp">
 
-        <!-- Header -->
+        <!-- ── Header ──────────────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="20dp">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Digital Wallet"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Liquid Cash · P2P Transfers"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary" />
-
-            </LinearLayout>
+                android:text="Digital Wallet"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:src="@drawable/ic_bell"
                 android:padding="8dp"
-                android:background="@color/surface"
+                android:background="#131523"
+                app:tint="#8892B0"
                 android:contentDescription="Notifications" />
 
         </LinearLayout>
 
-        <!-- Virtual Card -->
+        <!-- ── Virtual Card ─────────────────────────────────────────────── -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:strokeWidth="0dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:id="@+id/cardContent"
@@ -68,59 +58,81 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/bg_virtual_card"
-                android:padding="24dp">
+                android:padding="22dp">
 
-                <!-- Top row -->
+                <!-- Top row: APEX PAY branding + Active badge -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="LIQUID CASH"
-                        android:textSize="11sp"
-                        android:letterSpacing="0.15"
-                        android:textColor="#B3FFFFFF" />
+                        android:text="APEX PAY"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.1"
+                        android:textColor="#FFFFFF" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="APEX PAY"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:text="● Active"
+                        android:textSize="11sp"
+                        android:textColor="#00C896"
+                        android:background="#1A3A2E"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="3dp" />
 
                 </LinearLayout>
 
+                <!-- Masked account number -->
+                <TextView
+                    android:id="@+id/tvAccountNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APX  ••••  ••••  0000"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.08"
+                    android:textColor="#B0FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
                 <!-- Balance -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Liquid Cash Balance"
+                    android:textSize="11sp"
+                    android:textColor="#80FFFFFF"
+                    android:letterSpacing="0.05" />
+
                 <TextView
                     android:id="@+id/tvWalletBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$12,450.00"
-                    android:textSize="38sp"
+                    android:text="$0.00"
+                    android:textSize="36sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="20dp" />
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="16dp" />
 
-                <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#33FFFFFF"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="14dp" />
 
-                <!-- Holder + Expiry -->
+                <!-- Holder + Expiry row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="14dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -132,18 +144,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="CARD HOLDER"
-                            android:textSize="10sp"
+                            android:textSize="9sp"
                             android:letterSpacing="0.1"
-                            android:textColor="#80FFFFFF" />
+                            android:textColor="#70FFFFFF" />
 
                         <TextView
                             android:id="@+id/tvCardHolder"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="AHMAD SIDDIQUE"
-                            android:textSize="14sp"
+                            android:text="USER"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white"
+                            android:textColor="#FFFFFF"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -158,43 +170,32 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="VALID THRU"
-                            android:textSize="10sp"
+                            android:textSize="9sp"
                             android:letterSpacing="0.1"
-                            android:textColor="#80FFFFFF" />
+                            android:textColor="#70FFFFFF" />
 
                         <TextView
                             android:id="@+id/tvCardExpiry"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="12/28"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white"
+                            android:textColor="#FFFFFF"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Account number -->
-                <TextView
-                    android:id="@+id/tvAccountNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="APX  ••••  ••••  9901"
-                    android:textSize="15sp"
-                    android:letterSpacing="0.1"
-                    android:textColor="@android:color/white"
-                    android:layout_marginBottom="16dp" />
-
                 <!-- Freeze button -->
                 <Button
                     android:id="@+id/btnFreeze"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:text="&#10052;  Freeze Card"
+                    android:layout_height="38dp"
+                    android:text="❅  Freeze Card"
                     android:textSize="13sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="#FFFFFF"
                     android:background="@drawable/bg_freeze_btn"
                     android:stateListAnimator="@null" />
 
@@ -202,21 +203,13 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Quick Actions -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick Actions"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginBottom="16dp" />
-
+        <!-- ── Quick Actions row ──────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="28dp">
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -225,23 +218,20 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnSendAction"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    android:src="@drawable/ic_send"
+                    android:gravity="center"
                     android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Send" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Send"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="22dp" android:layout_height="22dp"
+                        android:src="@drawable/ic_send" app:tint="#6366F1" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Send" android:textSize="11sp" android:textColor="#8892B0"
                     android:layout_marginTop="6dp" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -251,23 +241,20 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnReceiveAction"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    android:src="@drawable/ic_receive"
+                    android:gravity="center"
                     android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Receive" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Receive"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="22dp" android:layout_height="22dp"
+                        android:src="@drawable/ic_receive" app:tint="#00C896" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Receive" android:textSize="11sp" android:textColor="#8892B0"
                     android:layout_marginTop="6dp" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -277,23 +264,20 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnTopUpAction"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    android:src="@drawable/ic_topup"
+                    android:gravity="center"
                     android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Top Up" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Top Up"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="22dp" android:layout_height="22dp"
+                        android:src="@drawable/ic_topup" app:tint="#F9A825" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Top Up" android:textSize="11sp" android:textColor="#8892B0"
                     android:layout_marginTop="6dp" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -303,50 +287,48 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnHistoryAction"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    android:src="@drawable/ic_wallet"
+                    android:gravity="center"
                     android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="History" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="History"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="22dp" android:layout_height="22dp"
+                        android:src="@drawable/ic_wallet" app:tint="#8892B0" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="History" android:textSize="11sp" android:textColor="#8892B0"
                     android:layout_marginTop="6dp" />
-
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Frequent Contacts -->
+        <!-- ── Quick Send Contacts ───────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:paddingHorizontal="20dp"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Frequent Contacts"
+                android:text="Quick Send"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+ Add New"
                 android:textSize="13sp"
-                android:textColor="@color/primary" />
+                android:textColor="#6366F1" />
 
         </LinearLayout>
 
@@ -354,16 +336,18 @@
             android:id="@+id/rvContacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="24dp"
+            android:paddingHorizontal="16dp"
             android:nestedScrollingEnabled="false" />
 
-        <!-- Active Subscriptions -->
+        <!-- ── Subscriptions ─────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:paddingHorizontal="20dp"
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -374,17 +358,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Active Subscriptions"
+                    android:text="Subscriptions"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="#FFFFFF" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Monthly recurring expenses"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="#8892B0" />
 
             </LinearLayout>
 
@@ -394,34 +378,36 @@
                 android:text="-$39.96/mo"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:textColor="#C62828" />
+                android:textColor="#FF5252" />
 
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp"
-            android:layout_marginBottom="28dp">
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#131523"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSubscriptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
                 android:nestedScrollingEnabled="false" />
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Recent Activity -->
+        <!-- ── Recent Activity ───────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:paddingHorizontal="20dp"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -430,25 +416,35 @@
                 android:text="Recent Activity"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/tvSeeAllWallet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="See All"
+                android:text="See all"
                 android:textSize="13sp"
-                android:textColor="@color/primary" />
+                android:textColor="#6366F1" />
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvWalletTransactions"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:layout_marginHorizontal="16dp"
+            app:cardBackgroundColor="#131523"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvWalletTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
 </ScrollView>
-

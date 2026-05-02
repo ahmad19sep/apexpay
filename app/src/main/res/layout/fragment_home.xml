@@ -3,22 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="#0D0F1A"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingBottom="24dp">
 
-        <!-- Header -->
+        <!-- ── Header ───────────────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="20dp">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="8dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -30,40 +32,43 @@
                     android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Good Morning"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary" />
+                    android:text="Good morning,"
+                    android:textSize="13sp"
+                    android:textColor="#8892B0" />
 
                 <TextView
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ahmad"
+                    android:text="User"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="#FFFFFF" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/ivNotifications"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:src="@drawable/ic_bell"
                 android:padding="8dp"
-                android:background="@color/surface"
+                android:background="#131523"
+                app:tint="#8892B0"
                 android:contentDescription="Notifications" />
 
         </LinearLayout>
 
-        <!-- Balance Card -->
+        <!-- ── Balance Card ─────────────────────────────────────────────── -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,24 +81,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Total Net Worth"
-                    android:textSize="13sp"
-                    android:textColor="#B3FFFFFF" />
+                    android:textSize="12sp"
+                    android:letterSpacing="0.05"
+                    android:textColor="#8892B0" />
 
                 <TextView
                     android:id="@+id/tvBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$12,450.00"
-                    android:textSize="36sp"
+                    android:text="$0.00"
+                    android:textSize="38sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
+                    android:textColor="#FFFFFF"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="20dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#33FFFFFF"
+                    android:background="#22253A"
                     android:layout_marginBottom="16dp" />
 
                 <LinearLayout
@@ -101,7 +107,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Income -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -111,23 +116,22 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="↑  Cash"
-                            android:textSize="12sp"
-                            android:textColor="#B3FFFFFF" />
+                            android:text="↑  Liquid Cash"
+                            android:textSize="11sp"
+                            android:textColor="#8892B0" />
 
                         <TextView
                             android:id="@+id/tvIncome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$8,240.00"
-                            android:textSize="16sp"
+                            android:text="$0.00"
+                            android:textSize="17sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white"
-                            android:layout_marginTop="2dp" />
+                            android:textColor="#00C896"
+                            android:layout_marginTop="3dp" />
 
                     </LinearLayout>
 
-                    <!-- Expenses -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -137,19 +141,71 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="↓  Portfolio"
-                            android:textSize="12sp"
-                            android:textColor="#B3FFFFFF" />
+                            android:text="↑  Portfolio"
+                            android:textSize="11sp"
+                            android:textColor="#8892B0" />
 
                         <TextView
                             android:id="@+id/tvExpenses"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$3,120.00"
-                            android:textSize="16sp"
+                            android:text="$0.00"
+                            android:textSize="17sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white"
-                            android:layout_marginTop="2dp" />
+                            android:textColor="#6366F1"
+                            android:layout_marginTop="3dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Quick action buttons inside card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp">
+
+                    <LinearLayout
+                        android:id="@+id/btnSend"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:background="#6366F1"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="↑  Send"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnReceive"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:background="#1A1C2E"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="↓  Receive"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
 
                     </LinearLayout>
 
@@ -159,23 +215,14 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Quick Actions -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick Actions"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginBottom="16dp" />
-
+        <!-- ── Quick Actions ────────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="28dp">
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="24dp">
 
-            <!-- Send -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -183,80 +230,31 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/btnSend"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:src="@drawable/ic_send"
-                    android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Send" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Send"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="6dp" />
-
-            </LinearLayout>
-
-            <!-- Receive -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/btnReceive"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:src="@drawable/ic_receive"
-                    android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Receive" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Receive"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="6dp" />
-
-            </LinearLayout>
-
-            <!-- Top Up -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnTopUp"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    android:src="@drawable/ic_topup"
+                    android:gravity="center"
                     android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Top Up" />
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_topup"
+                        app:tint="#6366F1" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Top Up"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textColor="#8892B0"
                     android:layout_marginTop="6dp" />
 
             </LinearLayout>
 
-            <!-- Scan -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -264,33 +262,189 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnScan"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    android:src="@drawable/ic_scan"
+                    android:gravity="center"
                     android:background="@drawable/bg_quick_action"
-                    android:padding="14dp"
-                    android:contentDescription="Scan" />
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_scan"
+                        app:tint="#00C896" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Scan"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:text="History"
+                    android:textSize="11sp"
+                    android:textColor="#8892B0"
                     android:layout_marginTop="6dp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Recent Transactions Header -->
+        <!-- ── Allocation Chart ─────────────────────────────────────────── -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#131523"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Allocation"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="by asset type"
+                        android:textSize="12sp"
+                        android:textColor="#8892B0" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChartAllocation"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp" />
+
+                    <!-- Legend -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:gravity="center_vertical"
+                            android:layout_marginBottom="10dp">
+                            <View android:layout_width="10dp" android:layout_height="10dp"
+                                android:background="#6366F1" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp" android:text="Stocks"
+                                android:textSize="13sp" android:textColor="#FFFFFF" />
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:gravity="center_vertical"
+                            android:layout_marginBottom="10dp">
+                            <View android:layout_width="10dp" android:layout_height="10dp"
+                                android:background="#00C896" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp" android:text="Crypto"
+                                android:textSize="13sp" android:textColor="#FFFFFF" />
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:gravity="center_vertical">
+                            <View android:layout_width="10dp" android:layout_height="10dp"
+                                android:background="#8892B0" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp" android:text="Cash"
+                                android:textSize="13sp" android:textColor="#FFFFFF" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── Money In vs Out ──────────────────────────────────────────── -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#131523"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Money In vs Out"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6 months"
+                        android:textSize="12sp"
+                        android:textColor="#6366F1" />
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChartFlow"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── Recent Transactions ──────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
             android:layout_marginBottom="12dp">
 
             <TextView
@@ -300,24 +454,34 @@
                 android:text="Recent Transactions"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/tvSeeAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="See All"
+                android:text="See all"
                 android:textSize="13sp"
-                android:textColor="@color/primary" />
+                android:textColor="#6366F1" />
 
         </LinearLayout>
 
-        <!-- Transactions List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTransactions"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:layout_marginHorizontal="16dp"
+            app:cardBackgroundColor="#131523"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

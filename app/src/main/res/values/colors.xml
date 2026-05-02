@@ -3,23 +3,32 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary">#1565C0</color>
-    <color name="primary_dark">#003c8f</color>
-    <color name="primary_light">#5e92f3</color>
-    <color name="splash_bg">#1565C0</color>
-    <color name="background">#F4F6F9</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="error">#D32F2F</color>
+    <!-- Primary Accent — Indigo -->
+    <color name="primary">#6366F1</color>
+    <color name="primary_dark">#4F52CC</color>
+    <color name="primary_light">#818CF8</color>
 
-    <!-- Brokerage dark theme -->
+    <!-- Dark Backgrounds -->
+    <color name="splash_bg">#0D0F1A</color>
+    <color name="background">#0D0F1A</color>
+    <color name="surface">#131523</color>
+    <color name="card_bg">#1A1C2E</color>
+    <color name="divider">#22253A</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#8892B0</color>
+
+    <!-- Status -->
+    <color name="error">#FF5252</color>
+    <color name="gain_green">#00C896</color>
+    <color name="loss_red">#FF5252</color>
+
+    <!-- Brokerage (kept for compatibility) -->
     <color name="brokerage_bg">#0D0F1A</color>
     <color name="brokerage_surface">#131523</color>
     <color name="brokerage_card">#1A1C2E</color>
     <color name="brokerage_card2">#22253A</color>
-    <color name="gain_green">#00C896</color>
-    <color name="loss_red">#FF5252</color>
     <color name="text_on_dark">#FFFFFF</color>
     <color name="text_on_dark_secondary">#8892B0</color>
     <color name="accent_indigo">#6366F1</color>

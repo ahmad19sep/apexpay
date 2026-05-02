@@ -69,7 +69,9 @@
                 android:background="@drawable/bg_input_field"
                 android:hint="@string/enter_name_account"
                 android:inputType="text"
-                android:paddingHorizontal="16dp" />
+                android:paddingHorizontal="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8892B0" />
 
             <!-- Frequent Contacts -->
             <androidx.recyclerview.widget.RecyclerView
@@ -100,7 +102,9 @@
                 android:inputType="numberDecimal"
                 android:paddingHorizontal="16dp"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8892B0" />
 
             <!-- Preset Chips -->
             <LinearLayout
@@ -176,7 +180,9 @@
                 android:background="@drawable/bg_input_field"
                 android:hint="@string/what_is_this_for"
                 android:inputType="text"
-                android:paddingHorizontal="16dp" />
+                android:paddingHorizontal="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8892B0" />
 
         </LinearLayout>
     </ScrollView>
