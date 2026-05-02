@@ -11,7 +11,7 @@ public class Config
 
 
 
-    public static final String GROK_API_KEY = "YOUR_GROQ_API_KEY_HERE";
+    public static final String GROK_API_KEY = "";
 
     // Model — llama-3.3-70b-versatile is free and very capable on Groq
     public static final String GROK_MODEL = "llama-3.3-70b-versatile";

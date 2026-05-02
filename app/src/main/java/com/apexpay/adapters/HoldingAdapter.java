@@ -61,7 +61,8 @@ public class HoldingAdapter extends RecyclerView.Adapter<HoldingAdapter.VH> {
         double pnl    = holding.getProfitLoss();
         double pnlPct = holding.getProfitLossPct();
         boolean gain  = pnl >= 0;
-        h.tvPnl.setText(String.format("%+$,.2f (%.2f%%)", pnl, pnlPct));
+        String pnlSign = gain ? "+" : "-";
+        h.tvPnl.setText(String.format("%s$%,.2f (%.2f%%)", pnlSign, Math.abs(pnl), Math.abs(pnlPct)));
         h.tvPnl.setTextColor(gain
                 ? Color.parseColor("#00C896")
                 : Color.parseColor("#FF5252"));

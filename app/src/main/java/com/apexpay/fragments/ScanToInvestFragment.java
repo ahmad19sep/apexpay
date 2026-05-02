@@ -155,7 +155,12 @@ public class ScanToInvestFragment extends Fragment {
                         if (ticker != null) {
                             detected = true;
                             String finalTicker = ticker;
-                            requireActivity().runOnUiThread(() -> showResult(finalTicker));
+                            android.app.Activity act = getActivity();
+                            if (act != null) {
+                                act.runOnUiThread(() -> {
+                                    if (isAdded()) showResult(finalTicker);
+                                });
+                            }
                             break;
                         }
                     }

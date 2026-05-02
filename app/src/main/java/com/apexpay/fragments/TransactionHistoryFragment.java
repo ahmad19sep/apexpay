@@ -71,7 +71,7 @@ public class TransactionHistoryFragment extends Fragment {
                 chip.setTextColor(Color.WHITE);
             } else {
                 chip.setBackgroundResource(R.drawable.bg_chip_unselected);
-                chip.setTextColor(Color.parseColor("#757575"));
+                chip.setTextColor(Color.parseColor("#8892B0"));
             }
         }
     }

@@ -64,8 +64,9 @@ public class BrokerageFragment extends Fragment {
         // Then kick off live price fetch
         showLoading(true);
         MarketDataService.fetchLivePrices(() -> {
-            if (isAdded() && getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
+            android.app.Activity act = getActivity();
+            if (isAdded() && act != null) {
+                act.runOnUiThread(() -> {
                     if (isAdded()) {
                         showLoading(false);
                         refreshAll();

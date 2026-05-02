@@ -38,8 +38,8 @@ public class TopUpFragment extends Fragment {
         EditText etCustomAmount = view.findViewById(R.id.etCustomAmount);
 
         int[] chipIds    = {R.id.chipAmt50, R.id.chipAmt100, R.id.chipAmt200,
-                            R.id.chipAmt500, R.id.chipAmt1000};
-        String[] amounts = {"50", "100", "200", "500", "1000"};
+                            R.id.chipAmt500, R.id.chipAmt1000, R.id.chipAmt5000};
+        String[] amounts = {"50", "100", "200", "500", "1000", "5000"};
         for (int i = 0; i < chipIds.length; i++) {
             String val = amounts[i];
             view.findViewById(chipIds[i]).setOnClickListener(v -> {
