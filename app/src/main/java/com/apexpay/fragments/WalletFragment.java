@@ -1,5 +1,6 @@
 package com.apexpay.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,65 +20,81 @@ import com.apexpay.R;
 import com.apexpay.adapters.FrequentContactAdapter;
 import com.apexpay.adapters.SubscriptionAdapter;
 import com.apexpay.adapters.TransactionAdapter;
+import com.apexpay.database.DatabaseHelper;
 import com.apexpay.models.FrequentContact;
 import com.apexpay.models.Subscription;
 import com.apexpay.models.Transaction;
-import com.apexpay.models.Wallet;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WalletFragment extends Fragment {
 
-    private static final String ARG_EMAIL = "email";
+    private static final String[] AVATAR_COLORS = {
+        "#E53935", "#8E24AA", "#1E88E5", "#00897B", "#F4511E", "#F9A825", "#6366F1", "#00C896"
+    };
 
-    private Wallet wallet;
-    private boolean isFrozen = false;
-    private View rootView;
-
-    public static WalletFragment newInstance(String email) {
-        WalletFragment fragment = new WalletFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_EMAIL, email);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private DatabaseHelper    db;
+    private SharedPreferences prefs;
+    private boolean           isFrozen = false;
+    private View              rootView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_wallet, container, false);
-
-        String email = getArguments() != null ? getArguments().getString(ARG_EMAIL, "") : "";
-        String name  = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
-        String displayName = capitalize(name);
-
-        wallet = new Wallet(displayName, "APX-7823-4521-9901", 12450.00, "12/28");
+        db    = new DatabaseHelper(requireContext());
+        prefs = requireActivity().getSharedPreferences("ApexPayPrefs",
+                android.content.Context.MODE_PRIVATE);
 
         setupCard();
         setupQuickActions();
-        setupFrequentContacts();
+        setupContacts();
         setupSubscriptions();
         setupRecentTransactions();
+        checkIncomingTransfers();
 
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (rootView != null) {
+            refreshBalance();
+            setupRecentTransactions();
+        }
+    }
+
+    // ── Card ──────────────────────────────────────────────────────────────────
+
     private void setupCard() {
-        TextView tvBalance = rootView.findViewById(R.id.tvWalletBalance);
-        tvBalance.setText(String.format("$%,.2f", wallet.balance));
+        refreshBalance();
 
-        TextView tvHolder = rootView.findViewById(R.id.tvCardHolder);
-        tvHolder.setText(wallet.holderName.toUpperCase());
+        String holderName   = prefs.getString("holderName", "User");
+        String accountNumber = prefs.getString("accountNumber", "APX-0000-0000-0000");
+        String lastFour     = accountNumber.length() >= 4
+                ? accountNumber.substring(accountNumber.length() - 4) : "0000";
 
-        TextView tvAccount = rootView.findViewById(R.id.tvAccountNumber);
-        tvAccount.setText("APX  ••••  ••••  9901");
+        ((TextView) rootView.findViewById(R.id.tvCardHolder))
+                .setText(holderName.toUpperCase());
+        ((TextView) rootView.findViewById(R.id.tvAccountNumber))
+                .setText("APX  ••••  ••••  " + lastFour);
+        ((TextView) rootView.findViewById(R.id.tvCardExpiry))
+                .setText("12/28");
 
-        TextView tvExpiry = rootView.findViewById(R.id.tvCardExpiry);
-        tvExpiry.setText(wallet.cardExpiry);
+        rootView.findViewById(R.id.btnFreeze).setOnClickListener(v -> toggleFreeze());
+    }
 
-        Button btnFreeze = rootView.findViewById(R.id.btnFreeze);
-        btnFreeze.setOnClickListener(v -> toggleFreeze());
+    private void refreshBalance() {
+        double balance = getWalletBalance();
+        TextView tvBal = rootView.findViewById(R.id.tvWalletBalance);
+        if (tvBal != null) tvBal.setText(String.format("$%,.2f", balance));
     }
 
     private void toggleFreeze() {
@@ -86,25 +104,146 @@ public class WalletFragment extends Fragment {
         View btnSend             = rootView.findViewById(R.id.btnSendAction);
 
         cardContent.setBackgroundResource(isFrozen
-                ? R.drawable.bg_frozen_card
-                : R.drawable.bg_virtual_card);
-        btnFreeze.setText(isFrozen ? "✓  Unfreeze Card" : "❅  Freeze Card");
+                ? R.drawable.bg_frozen_card : R.drawable.bg_virtual_card);
+        ((Button) btnFreeze).setText(isFrozen ? "✓  Unfreeze Card" : "❅  Freeze Card");
         btnSend.setEnabled(!isFrozen);
         btnSend.setAlpha(isFrozen ? 0.4f : 1.0f);
     }
 
+    // ── Quick actions ─────────────────────────────────────────────────────────
+
     private void setupQuickActions() {
+        double balance      = getWalletBalance();
+        String holderName   = prefs.getString("holderName", "User");
+        String accountNumber = prefs.getString("accountNumber", "APX-0000-0000-0000");
+
         rootView.findViewById(R.id.btnSendAction).setOnClickListener(v -> {
             if (!isFrozen) {
-                loadSubFragment(SendMoneyFragment.newInstance(wallet.balance, wallet.holderName));
+                loadSubFragment(SendMoneyFragment.newInstance(balance, holderName));
             }
         });
         rootView.findViewById(R.id.btnReceiveAction).setOnClickListener(v ->
-                loadSubFragment(ReceiveMoneyFragment.newInstance(wallet.accountNumber, wallet.holderName)));
+                loadSubFragment(ReceiveMoneyFragment.newInstance(accountNumber, holderName)));
         rootView.findViewById(R.id.btnTopUpAction).setOnClickListener(v ->
                 loadSubFragment(new TopUpFragment()));
         rootView.findViewById(R.id.btnHistoryAction).setOnClickListener(v ->
                 loadSubFragment(new TransactionHistoryFragment()));
+    }
+
+    // ── Contacts (from SQLite, built as you send money) ───────────────────────
+
+    private void setupContacts() {
+        List<FrequentContact> contacts = db.getContacts();
+        if (contacts.isEmpty()) {
+            // No contacts yet — hide the contacts section title or show hint
+            return;
+        }
+
+        FrequentContactAdapter adapter = new FrequentContactAdapter(contacts);
+        adapter.setOnContactClickListener(contact -> loadSubFragment(
+                SendMoneyFragment.newInstanceWithContact(
+                        getWalletBalance(),
+                        prefs.getString("holderName", "User"),
+                        contact.name,
+                        contact.accountNumber)));
+
+        RecyclerView rv = rootView.findViewById(R.id.rvContacts);
+        rv.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+        rv.setAdapter(adapter);
+    }
+
+    // ── Subscriptions (static demo data) ─────────────────────────────────────
+
+    private void setupSubscriptions() {
+        List<Subscription> subs = Arrays.asList(
+                new Subscription("Netflix",         "🎬", 12.99, "May 15, 2026"),
+                new Subscription("Spotify",         "🎵",  9.99, "May 18, 2026"),
+                new Subscription("YouTube Premium", "▶",  13.99, "May 22, 2026"),
+                new Subscription("iCloud Storage",  "☁",   2.99, "May 30, 2026")
+        );
+        RecyclerView rv = rootView.findViewById(R.id.rvSubscriptions);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setNestedScrollingEnabled(false);
+        rv.setAdapter(new SubscriptionAdapter(subs));
+    }
+
+    // ── Recent transactions (from SQLite ledger) ──────────────────────────────
+
+    private void setupRecentTransactions() {
+        List<Transaction> txns = db.getRecentLedger(5);
+
+        rootView.findViewById(R.id.tvSeeAllWallet).setOnClickListener(v ->
+                loadSubFragment(new TransactionHistoryFragment()));
+
+        RecyclerView rv = rootView.findViewById(R.id.rvWalletTransactions);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setNestedScrollingEnabled(false);
+        rv.setAdapter(new TransactionAdapter(txns));
+    }
+
+    // ── Firebase: check for incoming transfers ────────────────────────────────
+
+    private void checkIncomingTransfers() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        String myAccountNumber = prefs.getString("accountNumber", "");
+        if (myAccountNumber.isEmpty() || myAccountNumber.equals("APX-0000-0000-0000")) return;
+
+        FirebaseFirestore.getInstance()
+                .collection("transfers")
+                .whereEqualTo("toAccountNumber", myAccountNumber)
+                .whereEqualTo("status", "pending")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    boolean received = false;
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        Double amountObj = doc.getDouble("amount");
+                        String fromName  = doc.getString("fromName");
+                        if (amountObj == null || amountObj <= 0) continue;
+
+                        double amount = amountObj;
+                        String senderName = (fromName != null && !fromName.isEmpty())
+                                ? fromName : "ApexPay User";
+
+                        // Credit balance
+                        double newBal = getWalletBalance() + amount;
+                        saveWalletBalance(newBal);
+
+                        // Record in ledger
+                        db.insertLedger("💰", "Received from " + senderName, amount, true);
+
+                        // Mark as claimed in Firestore
+                        doc.getReference().update("status", "claimed");
+
+                        // Save sender as a contact
+                        String fromAccount = doc.getString("fromAccountNumber");
+                        if (fromAccount != null && !fromAccount.isEmpty()) {
+                            db.upsertContact(senderName, fromAccount,
+                                    AVATAR_COLORS[(int)(Math.random() * AVATAR_COLORS.length)]);
+                        }
+
+                        received = true;
+                    }
+
+                    if (received && isAdded()) {
+                        refreshBalance();
+                        setupRecentTransactions();
+                        Toast.makeText(requireContext(),
+                                "💰 You have incoming transfers!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private double getWalletBalance() {
+        return Double.longBitsToDouble(
+                prefs.getLong("walletBalance", Double.doubleToLongBits(0.0)));
+    }
+
+    private void saveWalletBalance(double v) {
+        prefs.edit().putLong("walletBalance", Double.doubleToLongBits(v)).apply();
     }
 
     private void loadSubFragment(Fragment fragment) {
@@ -113,61 +252,5 @@ public class WalletFragment extends Fragment {
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    private void setupFrequentContacts() {
-        ArrayList<FrequentContact> contacts = new ArrayList<>();
-        contacts.add(new FrequentContact("Ali",   "AL", "APX-1234-5678-0001", "#E53935"));
-        contacts.add(new FrequentContact("Sara",  "SA", "APX-2345-6789-0002", "#8E24AA"));
-        contacts.add(new FrequentContact("Omar",  "OM", "APX-3456-7890-0003", "#1E88E5"));
-        contacts.add(new FrequentContact("Hana",  "HA", "APX-4567-8901-0004", "#00897B"));
-        contacts.add(new FrequentContact("Zaid",  "ZA", "APX-5678-9012-0005", "#F4511E"));
-        contacts.add(new FrequentContact("Noor",  "NO", "APX-6789-0123-0006", "#F9A825"));
-
-        FrequentContactAdapter adapter = new FrequentContactAdapter(contacts);
-        adapter.setOnContactClickListener(contact -> {
-            loadSubFragment(SendMoneyFragment.newInstanceWithContact(
-                    wallet.balance, wallet.holderName,
-                    contact.name, contact.accountNumber));
-        });
-
-        RecyclerView rv = rootView.findViewById(R.id.rvContacts);
-        rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        rv.setAdapter(adapter);
-    }
-
-    private void setupSubscriptions() {
-        ArrayList<Subscription> subscriptions = new ArrayList<>();
-        subscriptions.add(new Subscription("Netflix",          "🎬", 12.99, "May 15, 2026"));
-        subscriptions.add(new Subscription("Spotify",          "🎵",  9.99, "May 18, 2026"));
-        subscriptions.add(new Subscription("YouTube Premium",  "▶",       13.99, "May 22, 2026"));
-        subscriptions.add(new Subscription("iCloud Storage",   "☁",        2.99, "May 30, 2026"));
-
-        RecyclerView rv = rootView.findViewById(R.id.rvSubscriptions);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setNestedScrollingEnabled(false);
-        rv.setAdapter(new SubscriptionAdapter(subscriptions));
-    }
-
-    private void setupRecentTransactions() {
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction("💸", "Sent to Ali",          "Apr 30, 2026", "-$200.00", false));
-        transactions.add(new Transaction("💰", "Received from Sara",   "Apr 29, 2026", "+$150.00", true));
-        transactions.add(new Transaction("🏦", "Bank Top-Up",          "Apr 28, 2026", "+$500.00", true));
-        transactions.add(new Transaction("🛒", "Market Pay",           "Apr 27, 2026",  "-$45.50", false));
-        transactions.add(new Transaction("💸", "Sent to Hana",         "Apr 26, 2026", "-$300.00", false));
-
-        TextView tvSeeAll = rootView.findViewById(R.id.tvSeeAllWallet);
-        tvSeeAll.setOnClickListener(v -> loadSubFragment(new TransactionHistoryFragment()));
-
-        RecyclerView rv = rootView.findViewById(R.id.rvWalletTransactions);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setNestedScrollingEnabled(false);
-        rv.setAdapter(new TransactionAdapter(transactions));
-    }
-
-    private String capitalize(String s) {
-        if (s == null || s.isEmpty()) return s;
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }

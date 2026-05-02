@@ -1,10 +1,12 @@
 package com.apexpay.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,18 +14,25 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.apexpay.R;
 import com.apexpay.MainActivity;
+import com.apexpay.R;
 import com.apexpay.adapters.TransactionAdapter;
+import com.apexpay.database.DatabaseHelper;
+import com.apexpay.models.Asset;
+import com.apexpay.models.Holding;
 import com.apexpay.models.Transaction;
+import com.apexpay.services.MarketDataService;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private static final String ARG_EMAIL = "email";
+
+    private View              rootView;
+    private DatabaseHelper    db;
+    private SharedPreferences prefs;
 
     public static HomeFragment newInstance(String email) {
         HomeFragment fragment = new HomeFragment();
@@ -37,26 +46,82 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        db       = new DatabaseHelper(requireContext());
+        prefs    = requireActivity().getSharedPreferences("ApexPayPrefs", android.content.Context.MODE_PRIVATE);
 
         String email = getArguments() != null ? getArguments().getString(ARG_EMAIL, "") : "";
-        String name = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
+        String name  = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
 
-        TextView tvGreeting = view.findViewById(R.id.tvGreeting);
-        TextView tvUserName = view.findViewById(R.id.tvUserName);
-        tvGreeting.setText(getGreeting());
-        tvUserName.setText(capitalize(name));
+        rootView.<TextView>findViewById(R.id.tvGreeting).setText(getGreeting());
+        rootView.<TextView>findViewById(R.id.tvUserName).setText(capitalize(name));
 
-        setupQuickActions(view);
-        setupTransactions(view);
-        return view;
+        setupQuickActions();
+        setupNavigation();
+        refreshData();
+
+        return rootView;
     }
 
-    private void setupQuickActions(View view) {
-        view.findViewById(R.id.btnSend).setOnClickListener(v -> navigateTo(new SendMoneyFragment()));
-        view.findViewById(R.id.btnReceive).setOnClickListener(v -> navigateTo(new ReceiveMoneyFragment()));
-        view.findViewById(R.id.btnTopUp).setOnClickListener(v -> navigateTo(new TopUpFragment()));
-        view.findViewById(R.id.btnScan).setOnClickListener(v -> navigateTo(new TransactionHistoryFragment())); // Using TransactionHistory for Scan placeholder
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (rootView != null) refreshData();
+    }
+
+    // ── Data refresh ─────────────────────────────────────────────────────────
+
+    private void refreshData() {
+        double walletCash     = getPrefsDouble("walletBalance", 0.0);
+        double simCash        = getPrefsDouble("simCash",       10000.0);
+        double portfolioValue = computePortfolioValue();
+        double totalNetWorth  = walletCash + simCash + portfolioValue;
+
+        rootView.<TextView>findViewById(R.id.tvBalance)
+                .setText(String.format("$%,.2f", totalNetWorth));
+        rootView.<TextView>findViewById(R.id.tvIncome)
+                .setText(String.format("$%,.2f", walletCash + simCash));
+        rootView.<TextView>findViewById(R.id.tvExpenses)
+                .setText(String.format("$%,.2f", portfolioValue));
+
+        refreshTransactions();
+    }
+
+    private double computePortfolioValue() {
+        double total = 0;
+        for (Holding h : db.getAllHoldings()) {
+            Asset a = MarketDataService.getAsset(h.symbol);
+            if (a != null) total += h.quantity * a.price;
+        }
+        return total;
+    }
+
+    private void refreshTransactions() {
+        List<Transaction> items = db.getRecentLedger(5);
+
+        RecyclerView rv = rootView.findViewById(R.id.rvTransactions);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setAdapter(new TransactionAdapter(items));
+    }
+
+    // ── UI setup ─────────────────────────────────────────────────────────────
+
+    private void setupQuickActions() {
+        rootView.findViewById(R.id.btnSend).setOnClickListener(v ->
+                navigateTo(new SendMoneyFragment()));
+        rootView.findViewById(R.id.btnReceive).setOnClickListener(v ->
+                navigateTo(new ReceiveMoneyFragment()));
+        rootView.findViewById(R.id.btnTopUp).setOnClickListener(v ->
+                navigateTo(new TopUpFragment()));
+        rootView.findViewById(R.id.btnScan).setOnClickListener(v ->
+                navigateTo(new TransactionHistoryFragment()));
+    }
+
+    private void setupNavigation() {
+        rootView.findViewById(R.id.tvSeeAll).setOnClickListener(v ->
+                navigateTo(new TransactionHistoryFragment()));
+        rootView.findViewById(R.id.ivNotifications).setOnClickListener(v ->
+                Toast.makeText(getContext(), "No new notifications", Toast.LENGTH_SHORT).show());
     }
 
     private void navigateTo(Fragment fragment) {
@@ -65,18 +130,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void setupTransactions(View view) {
-        List<Transaction> transactions = Arrays.asList(
-                new Transaction("💼", "Salary Received",   "Apr 28, 2026", "+$3,500.00", true),
-                new Transaction("🛒", "Grocery Store",     "Apr 27, 2026",   "-$85.00", false),
-                new Transaction("🎬", "Netflix",           "Apr 26, 2026",   "-$12.99", false),
-                new Transaction("↗️", "Transfer to Ali",   "Apr 25, 2026",  "-$200.00", false),
-                new Transaction("💻", "Freelance Project", "Apr 24, 2026",  "+$450.00", true)
-        );
+    // ── Helpers ──────────────────────────────────────────────────────────────
 
-        RecyclerView rv = view.findViewById(R.id.rvTransactions);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(new TransactionAdapter(transactions));
+    private double getPrefsDouble(String key, double defaultValue) {
+        return Double.longBitsToDouble(
+                prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
     private String getGreeting() {

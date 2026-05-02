@@ -1,5 +1,6 @@
 package com.apexpay.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apexpay.R;
 import com.apexpay.adapters.FrequentContactAdapter;
+import com.apexpay.database.DatabaseHelper;
 import com.apexpay.models.FrequentContact;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SendMoneyFragment extends Fragment {
 
@@ -29,8 +36,12 @@ public class SendMoneyFragment extends Fragment {
     private static final String ARG_RECIPIENT = "recipient";
     private static final String ARG_ACCT      = "acct";
 
-    private double walletBalance;
-    private String holderName;
+    private static final String[] AVATAR_COLORS = {
+        "#E53935", "#8E24AA", "#1E88E5", "#00897B", "#F4511E", "#F9A825", "#6366F1"
+    };
+
+    private DatabaseHelper    db;
+    private SharedPreferences prefs;
 
     public static SendMoneyFragment newInstance(double balance, String name) {
         SendMoneyFragment f = new SendMoneyFragment();
@@ -59,107 +70,176 @@ public class SendMoneyFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money, container, false);
 
-        Bundle args = getArguments();
-        walletBalance = args != null ? args.getDouble(ARG_BALANCE, 0) : 0;
-        holderName    = args != null ? args.getString(ARG_NAME, "")  : "";
+        db    = new DatabaseHelper(requireContext());
+        prefs = requireActivity().getSharedPreferences("ApexPayPrefs",
+                android.content.Context.MODE_PRIVATE);
 
-        // Back navigation
+        Bundle args = getArguments();
+        String holderName = args != null ? args.getString(ARG_NAME, "") : "";
+
         view.findViewById(R.id.btnBack).setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
-        // Balance display
-        TextView tvAvailable = view.findViewById(R.id.tvAvailableBalance);
-        tvAvailable.setText(String.format("Available: $%,.2f", walletBalance));
+        // Always read live balance from SharedPreferences
+        double currentBalance = getWalletBalance();
+        ((TextView) view.findViewById(R.id.tvAvailableBalance))
+                .setText(String.format("Available: $%,.2f", currentBalance));
+
+        EditText etRecipient = view.findViewById(R.id.etRecipient);
+        EditText etAmount    = view.findViewById(R.id.etAmount);
+        EditText etNote      = view.findViewById(R.id.etNote);
 
         // Pre-fill recipient if coming from contact tap
-        EditText etRecipient = view.findViewById(R.id.etRecipient);
-        if (args != null && args.getString(ARG_RECIPIENT) != null) {
+        if (args != null && args.getString(ARG_RECIPIENT) != null)
             etRecipient.setText(args.getString(ARG_RECIPIENT));
-        }
 
-        // Preset amount chips
-        EditText etAmount = view.findViewById(R.id.etAmount);
-        int[] presetIds = {R.id.chip50, R.id.chip100, R.id.chip200, R.id.chip500};
+        // Quick preset chips
+        int[] chipIds    = {R.id.chip50, R.id.chip100, R.id.chip200, R.id.chip500};
         String[] presets = {"50", "100", "200", "500"};
-        for (int i = 0; i < presetIds.length; i++) {
+        for (int i = 0; i < chipIds.length; i++) {
             String val = presets[i];
-            view.findViewById(presetIds[i]).setOnClickListener(v -> etAmount.setText(val));
+            view.findViewById(chipIds[i]).setOnClickListener(v -> etAmount.setText(val));
         }
 
-        // Frequent contacts quick-select
+        // Contacts from SQLite (people you've previously sent to)
         setupContacts(view, etRecipient);
 
         // Send button
-        EditText etNote = view.findViewById(R.id.etNote);
-        Button btnSend  = view.findViewById(R.id.btnSendMoney);
-        btnSend.setOnClickListener(v -> {
+        view.findViewById(R.id.btnSendMoney).setOnClickListener(v -> {
             String recipient = etRecipient.getText().toString().trim();
-            String amountStr = etAmount.getText().toString().trim();
+            String amtStr    = etAmount.getText().toString().trim();
             String note      = etNote.getText().toString().trim();
 
             if (recipient.isEmpty()) {
                 etRecipient.setError("Enter recipient name or account");
                 return;
             }
-            if (amountStr.isEmpty()) {
-                etAmount.setError("Enter amount");
-                return;
-            }
+            if (amtStr.isEmpty()) { etAmount.setError("Enter amount"); return; }
 
             double amount;
-            try {
-                amount = Double.parseDouble(amountStr);
-            } catch (NumberFormatException e) {
-                etAmount.setError("Invalid amount");
-                return;
-            }
+            try { amount = Double.parseDouble(amtStr); }
+            catch (NumberFormatException e) { etAmount.setError("Invalid amount"); return; }
 
-            if (amount <= 0) {
-                etAmount.setError("Amount must be greater than 0");
-                return;
-            }
-            if (amount > walletBalance) {
-                etAmount.setError("Insufficient balance");
-                return;
-            }
+            if (amount <= 0)               { etAmount.setError("Must be > 0"); return; }
+            if (amount > getWalletBalance()) { etAmount.setError("Insufficient balance"); return; }
 
-            confirmSend(recipient, amount, note.isEmpty() ? "No note" : note);
+            confirmSend(holderName, recipient, amount,
+                    note.isEmpty() ? "No note" : note,
+                    args != null ? args.getString(ARG_ACCT, "") : "");
         });
 
         return view;
     }
 
-    private void confirmSend(String recipient, double amount, String note) {
-        String message = String.format(
-                "Send $%.2f to %s?\n\nNote: %s", amount, recipient, note);
+    private void confirmSend(String senderName, String recipientLabel,
+                             double amount, String note, String recipientAccountHint) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Transfer")
-                .setMessage(message)
-                .setPositiveButton("Send", (d, w) -> {
-                    walletBalance -= amount;
-                    Toast.makeText(requireContext(),
-                            String.format("✓ $%.2f sent to %s", amount, recipient),
-                            Toast.LENGTH_SHORT).show();
-                    requireActivity().getSupportFragmentManager().popBackStack();
-                })
+                .setMessage(String.format("Send $%.2f to %s?\n\nNote: %s",
+                        amount, recipientLabel, note))
+                .setPositiveButton("Send", (d, w) ->
+                        executeSend(senderName, recipientLabel, recipientAccountHint, amount, note))
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
+    private void executeSend(String senderName, String recipientLabel,
+                             String recipientAccountHint, double amount, String note) {
+        // 1. Deduct balance locally
+        double newBalance = getWalletBalance() - amount;
+        saveWalletBalance(newBalance);
+
+        // 2. Record debit in ledger
+        db.insertLedger("💸", "Sent to " + recipientLabel, amount, false);
+
+        // 3. Determine the recipient's account number
+        //    — if we already have it (from contact tap), use it directly
+        //    — otherwise try to interpret recipientLabel as an account number
+        String recipientAccount = "";
+        if (recipientAccountHint != null && recipientAccountHint.startsWith("APX-")) {
+            recipientAccount = recipientAccountHint;
+        } else if (recipientLabel.startsWith("APX-")) {
+            recipientAccount = recipientLabel;
+        }
+
+        if (!recipientAccount.isEmpty()) {
+            // Save as a contact in SQLite
+            String color = AVATAR_COLORS[(int)(Math.random() * AVATAR_COLORS.length)];
+            db.upsertContact(recipientLabel, recipientAccount, color);
+
+            // Write a Firestore transfer so the recipient's device picks it up
+            pushFirestoreTransfer(senderName, recipientAccount, amount, note);
+        } else {
+            // Recipient entered a name — look them up in Firestore by name
+            lookupByName(senderName, recipientLabel, amount, note);
+        }
+
+        Toast.makeText(requireContext(),
+                String.format("✓ $%.2f sent to %s", amount, recipientLabel),
+                Toast.LENGTH_SHORT).show();
+        requireActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private void pushFirestoreTransfer(String senderName, String toAccountNumber,
+                                       double amount, String note) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+        String myAccountNumber = prefs.getString("accountNumber", "");
+
+        Map<String, Object> transfer = new HashMap<>();
+        transfer.put("fromUid",          FirebaseAuth.getInstance().getCurrentUser().getUid());
+        transfer.put("fromName",         senderName);
+        transfer.put("fromAccountNumber", myAccountNumber);
+        transfer.put("toAccountNumber",  toAccountNumber);
+        transfer.put("amount",           amount);
+        transfer.put("note",             note);
+        transfer.put("status",           "pending");
+        transfer.put("timestamp",        System.currentTimeMillis());
+
+        FirebaseFirestore.getInstance()
+                .collection("transfers")
+                .add(transfer);
+    }
+
+    /** Look up a user by display name in Firestore — best-effort for demo. */
+    private void lookupByName(String senderName, String recipientName,
+                              double amount, String note) {
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .whereEqualTo("name", recipientName)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    for (QueryDocumentSnapshot doc : snap) {
+                        String acct = doc.getString("accountNumber");
+                        if (acct != null) {
+                            db.upsertContact(recipientName, acct,
+                                    AVATAR_COLORS[(int)(Math.random() * AVATAR_COLORS.length)]);
+                            pushFirestoreTransfer(senderName, acct, amount, note);
+                        }
+                    }
+                });
+    }
+
     private void setupContacts(View view, EditText etRecipient) {
-        ArrayList<FrequentContact> contacts = new ArrayList<>();
-        contacts.add(new FrequentContact("Ali",  "AL", "APX-1234-5678-0001", "#E53935"));
-        contacts.add(new FrequentContact("Sara", "SA", "APX-2345-6789-0002", "#8E24AA"));
-        contacts.add(new FrequentContact("Omar", "OM", "APX-3456-7890-0003", "#1E88E5"));
-        contacts.add(new FrequentContact("Hana", "HA", "APX-4567-8901-0004", "#00897B"));
-        contacts.add(new FrequentContact("Zaid", "ZA", "APX-5678-9012-0005", "#F4511E"));
-        contacts.add(new FrequentContact("Noor", "NO", "APX-6789-0123-0006", "#F9A825"));
+        List<FrequentContact> contacts = db.getContacts();
+        if (contacts.isEmpty()) return;
 
         FrequentContactAdapter adapter = new FrequentContactAdapter(contacts);
-        adapter.setOnContactClickListener(c -> etRecipient.setText(c.name));
+        adapter.setOnContactClickListener(c -> etRecipient.setText(c.accountNumber));
 
         RecyclerView rv = view.findViewById(R.id.rvSendContacts);
-        rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rv.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
         rv.setAdapter(adapter);
+    }
+
+    private double getWalletBalance() {
+        return Double.longBitsToDouble(
+                prefs.getLong("walletBalance", Double.doubleToLongBits(0.0)));
+    }
+
+    private void saveWalletBalance(double v) {
+        prefs.edit().putLong("walletBalance", Double.doubleToLongBits(v)).apply();
     }
 }
