@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="top"
+    android:paddingVertical="4dp">
+
+    <TextView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="🤖"
+        android:textSize="16sp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/tvAiMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="280dp"
+        android:background="#1A1C2E"
+        android:textColor="#CDD5E0"
+        android:textSize="14sp"
+        android:lineSpacingExtra="2dp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp" />
+
+</LinearLayout>
