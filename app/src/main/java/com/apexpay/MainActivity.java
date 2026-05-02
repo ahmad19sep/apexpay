@@ -56,10 +56,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Helper to load fragments. 
-     * @param addToBackStack true if this is a sub-page, false if it's a main tab.
-     */
+
     public boolean loadFragment(Fragment fragment, boolean addToBackStack) {
         var transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -73,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // Default loadFragment for backward compatibility with existing fragment calls
+
     public boolean loadFragment(Fragment fragment) {
         return loadFragment(fragment, true);
     }

@@ -146,16 +146,14 @@ public class SendMoneyFragment extends Fragment {
 
     private void executeSend(String senderName, String recipientLabel,
                              String recipientAccountHint, double amount, String note) {
-        // 1. Deduct balance locally
+
         double newBalance = getWalletBalance() - amount;
         saveWalletBalance(newBalance);
 
-        // 2. Record debit in ledger
+
         db.insertLedger("💸", "Sent to " + recipientLabel, amount, false);
 
-        // 3. Determine the recipient's account number
-        //    — if we already have it (from contact tap), use it directly
-        //    — otherwise try to interpret recipientLabel as an account number
+
         String recipientAccount = "";
         if (recipientAccountHint != null && recipientAccountHint.startsWith("APX-")) {
             recipientAccount = recipientAccountHint;
@@ -164,14 +162,10 @@ public class SendMoneyFragment extends Fragment {
         }
 
         if (!recipientAccount.isEmpty()) {
-            // Save as a contact in SQLite
             String color = AVATAR_COLORS[(int)(Math.random() * AVATAR_COLORS.length)];
             db.upsertContact(recipientLabel, recipientAccount, color);
-
-            // Write a Firestore transfer so the recipient's device picks it up
             pushFirestoreTransfer(senderName, recipientAccount, amount, note);
         } else {
-            // Recipient entered a name — look them up in Firestore by name
             lookupByName(senderName, recipientLabel, amount, note);
         }
 

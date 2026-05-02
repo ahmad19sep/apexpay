@@ -16,7 +16,8 @@ import androidx.fragment.app.Fragment;
 
 import com.apexpay.R;
 
-public class ReceiveMoneyFragment extends Fragment {
+public class
+ReceiveMoneyFragment extends Fragment {
 
     private static final String ARG_ACCOUNT = "account";
     private static final String ARG_NAME    = "name";

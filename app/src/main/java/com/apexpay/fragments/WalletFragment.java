@@ -71,7 +71,7 @@ public class WalletFragment extends Fragment {
         }
     }
 
-    // ── Card ──────────────────────────────────────────────────────────────────
+
 
     private void setupCard() {
         refreshBalance();
@@ -110,7 +110,7 @@ public class WalletFragment extends Fragment {
         btnSend.setAlpha(isFrozen ? 0.4f : 1.0f);
     }
 
-    // ── Quick actions ─────────────────────────────────────────────────────────
+
 
     private void setupQuickActions() {
         double balance      = getWalletBalance();
@@ -130,12 +130,10 @@ public class WalletFragment extends Fragment {
                 loadSubFragment(new TransactionHistoryFragment()));
     }
 
-    // ── Contacts (from SQLite, built as you send money) ───────────────────────
 
     private void setupContacts() {
         List<FrequentContact> contacts = db.getContacts();
         if (contacts.isEmpty()) {
-            // No contacts yet — hide the contacts section title or show hint
             return;
         }
 
@@ -153,7 +151,6 @@ public class WalletFragment extends Fragment {
         rv.setAdapter(adapter);
     }
 
-    // ── Subscriptions (static demo data) ─────────────────────────────────────
 
     private void setupSubscriptions() {
         List<Subscription> subs = Arrays.asList(
@@ -168,7 +165,6 @@ public class WalletFragment extends Fragment {
         rv.setAdapter(new SubscriptionAdapter(subs));
     }
 
-    // ── Recent transactions (from SQLite ledger) ──────────────────────────────
 
     private void setupRecentTransactions() {
         List<Transaction> txns = db.getRecentLedger(5);
@@ -182,7 +178,6 @@ public class WalletFragment extends Fragment {
         rv.setAdapter(new TransactionAdapter(txns));
     }
 
-    // ── Firebase: check for incoming transfers ────────────────────────────────
 
     private void checkIncomingTransfers() {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
@@ -205,17 +200,17 @@ public class WalletFragment extends Fragment {
                         String senderName = (fromName != null && !fromName.isEmpty())
                                 ? fromName : "ApexPay User";
 
-                        // Credit balance
+
                         double newBal = getWalletBalance() + amount;
                         saveWalletBalance(newBal);
 
-                        // Record in ledger
+
                         db.insertLedger("💰", "Received from " + senderName, amount, true);
 
-                        // Mark as claimed in Firestore
+
                         doc.getReference().update("status", "claimed");
 
-                        // Save sender as a contact
+
                         String fromAccount = doc.getString("fromAccountNumber");
                         if (fromAccount != null && !fromAccount.isEmpty()) {
                             db.upsertContact(senderName, fromAccount,
@@ -235,7 +230,6 @@ public class WalletFragment extends Fragment {
                 });
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
 
     private double getWalletBalance() {
         return Double.longBitsToDouble(

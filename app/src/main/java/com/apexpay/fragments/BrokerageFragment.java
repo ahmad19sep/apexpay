@@ -94,7 +94,7 @@ public class BrokerageFragment extends Fragment {
         refreshAll();
     }
 
-    // ── Binding ──────────────────────────────────────────────────────────────
+
 
     private void bindViews(View v) {
         tvPortfolioValue  = v.findViewById(R.id.tvPortfolioValue);
@@ -151,14 +151,13 @@ public class BrokerageFragment extends Fragment {
         tabETFs.setOnClickListener(click);
     }
 
-    // ── Loading state ─────────────────────────────────────────────────────────
 
     private void showLoading(boolean loading) {
         if (pbLoading != null) pbLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
         if (tvLiveStatus != null) tvLiveStatus.setText(loading ? "LOADING…" : "LIVE");
     }
 
-    // ── Refresh ──────────────────────────────────────────────────────────────
+
 
     private void refreshAll() {
         refreshAssetList();
@@ -211,7 +210,8 @@ public class BrokerageFragment extends Fragment {
         if (portfolioCost > 0 && tvPortfolioChange != null) {
             double pnl    = portfolioValue - portfolioCost;
             double pnlPct = (pnl / portfolioCost) * 100;
-            tvPortfolioChange.setText(String.format("%+$,.2f  (%+.2f%%)", pnl, pnlPct));
+            String pnlStr = (pnl >= 0 ? "+" : "-") + String.format("$%,.2f", Math.abs(pnl));
+            tvPortfolioChange.setText(String.format("%s  (%+.2f%%)", pnlStr, pnlPct));
             tvPortfolioChange.setTextColor(pnl >= 0
                     ? Color.parseColor("#00C896") : Color.parseColor("#FF5252"));
         } else if (tvPortfolioChange != null) {
@@ -220,7 +220,7 @@ public class BrokerageFragment extends Fragment {
         }
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+
 
     private void setActiveTab(String active, TextView... tabs) {
         String[] ids = {"all", "stocks", "crypto", "gainers", "etf"};

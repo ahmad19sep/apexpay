@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/background"
+    android:padding="32dp">
+
+    <TextView
+        android:id="@+id/tvPinTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter PIN"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvPinSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your PIN to continue"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:layout_marginBottom="40dp" />
+
+    <!-- 4 indicator dots -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="48dp">
+
+        <View android:id="@+id/dot1"
+            android:layout_width="18dp" android:layout_height="18dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/dot_empty" />
+        <View android:id="@+id/dot2"
+            android:layout_width="18dp" android:layout_height="18dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/dot_empty" />
+        <View android:id="@+id/dot3"
+            android:layout_width="18dp" android:layout_height="18dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/dot_empty" />
+        <View android:id="@+id/dot4"
+            android:layout_width="18dp" android:layout_height="18dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/dot_empty" />
+
+    </LinearLayout>
+
+    <!-- Row 1: 1 2 3 -->
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_marginBottom="12dp">
+        <Button android:id="@+id/btn1"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="1" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btn2"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="2" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btn3"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="3" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+    </LinearLayout>
+
+    <!-- Row 2: 4 5 6 -->
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_marginBottom="12dp">
+        <Button android:id="@+id/btn4"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="4" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btn5"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="5" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btn6"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="6" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+    </LinearLayout>
+
+    <!-- Row 3: 7 8 9 -->
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_marginBottom="12dp">
+        <Button android:id="@+id/btn7"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="7" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btn8"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="8" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btn9"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="9" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+    </LinearLayout>
+
+    <!-- Row 4: [spacer] 0 [delete] -->
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_marginBottom="24dp">
+        <View android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp" />
+        <Button android:id="@+id/btn0"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="0" android:textSize="22sp" android:textStyle="bold"
+            android:textColor="@color/text_primary" android:background="@drawable/bg_pin_key" />
+        <Button android:id="@+id/btnDelete"
+            android:layout_width="72dp" android:layout_height="72dp" android:layout_margin="8dp"
+            android:text="⌫" android:textSize="22sp"
+            android:textColor="@color/text_secondary" android:background="@drawable/bg_pin_key" />
+    </LinearLayout>
+
+    <!-- Use password instead (only shown in VERIFY mode) -->
+    <TextView
+        android:id="@+id/tvUsePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use email &amp; password instead"
+        android:textSize="13sp"
+        android:textColor="@color/primary"
+        android:padding="8dp" />
+
+</LinearLayout>

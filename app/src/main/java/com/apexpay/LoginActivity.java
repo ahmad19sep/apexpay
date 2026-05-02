@@ -194,8 +194,17 @@ public class LoginActivity extends AppCompatActivity {
 
                         Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("userEmail", email);
+                        SharedPreferences savedPrefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
+                        boolean hasPin = !savedPrefs.getString("userPin", "").isEmpty();
+
+                        Intent intent;
+                        if (hasPin) {
+                            intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("userEmail", email);
+                        } else {
+                            intent = new Intent(LoginActivity.this, PinActivity.class);
+                            intent.putExtra("mode", PinActivity.MODE_SETUP);
+                        }
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
