@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apexpay.R;
 import com.apexpay.models.FrequentContact;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FrequentContactAdapter extends RecyclerView.Adapter<FrequentContactAdapter.ViewHolder> {
 
@@ -20,10 +20,10 @@ public class FrequentContactAdapter extends RecyclerView.Adapter<FrequentContact
         void onContactClicked(FrequentContact contact);
     }
 
-    private final ArrayList<FrequentContact> contacts;
+    private final List<FrequentContact> contacts;
     private OnContactClickListener listener;
 
-    public FrequentContactAdapter(ArrayList<FrequentContact> list) {
+    public FrequentContactAdapter(List<FrequentContact> list) {
         contacts = list;
     }
 

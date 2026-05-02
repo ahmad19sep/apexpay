@@ -64,11 +64,13 @@ public class BrokerageFragment extends Fragment {
         // Then kick off live price fetch
         showLoading(true);
         MarketDataService.fetchLivePrices(() -> {
-            if (getActivity() != null) {
+            if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    showLoading(false);
-                    refreshAll();
-                    if (tvLiveStatus != null) tvLiveStatus.setText("LIVE");
+                    if (isAdded()) {
+                        showLoading(false);
+                        refreshAll();
+                        if (tvLiveStatus != null) tvLiveStatus.setText("LIVE");
+                    }
                 });
             }
         });

@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SendMoneyFragment extends Fragment {
@@ -83,7 +84,7 @@ public class SendMoneyFragment extends Fragment {
         // Always read live balance from SharedPreferences
         double currentBalance = getWalletBalance();
         ((TextView) view.findViewById(R.id.tvAvailableBalance))
-                .setText(String.format("Available: $%,.2f", currentBalance));
+                .setText(String.format(Locale.getDefault(), "Available: $%,.2f", currentBalance));
 
         EditText etRecipient = view.findViewById(R.id.etRecipient);
         EditText etAmount    = view.findViewById(R.id.etAmount);
@@ -135,7 +136,7 @@ public class SendMoneyFragment extends Fragment {
                              double amount, String note, String recipientAccountHint) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Transfer")
-                .setMessage(String.format("Send $%.2f to %s?\n\nNote: %s",
+                .setMessage(String.format(Locale.getDefault(), "Send $%.2f to %s?\n\nNote: %s",
                         amount, recipientLabel, note))
                 .setPositiveButton("Send", (d, w) ->
                         executeSend(senderName, recipientLabel, recipientAccountHint, amount, note))
@@ -175,7 +176,7 @@ public class SendMoneyFragment extends Fragment {
         }
 
         Toast.makeText(requireContext(),
-                String.format("✓ $%.2f sent to %s", amount, recipientLabel),
+                String.format(Locale.getDefault(), "✓ $%.2f sent to %s", amount, recipientLabel),
                 Toast.LENGTH_SHORT).show();
         requireActivity().getSupportFragmentManager().popBackStack();
     }
@@ -223,7 +224,8 @@ public class SendMoneyFragment extends Fragment {
 
     private void setupContacts(View view, EditText etRecipient) {
         List<FrequentContact> contacts = db.getContacts();
-        if (contacts.isEmpty()) return;
+        if (contacts.isEmpty()) 
+            return;
 
         FrequentContactAdapter adapter = new FrequentContactAdapter(contacts);
         adapter.setOnContactClickListener(c -> etRecipient.setText(c.accountNumber));

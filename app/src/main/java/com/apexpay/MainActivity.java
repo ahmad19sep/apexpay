@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.apexpay.fragments.AiFragment;
 import com.apexpay.fragments.BrokerageFragment;
@@ -16,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private String userEmail;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,29 +30,51 @@ public class MainActivity extends AppCompatActivity {
             userEmail = prefs.getString("userEmail", "");
         }
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.nav_home)      return loadFragment(HomeFragment.newInstance(userEmail));
-            if (id == R.id.nav_wallet)    return loadFragment(new WalletFragment());
-            if (id == R.id.nav_brokerage) return loadFragment(new BrokerageFragment());
-            if (id == R.id.nav_ai)        return loadFragment(new AiFragment());
-            if (id == R.id.nav_profile)   return loadFragment(ProfileFragment.newInstance(userEmail));
+            Fragment fragment = null;
+            
+            if (id == R.id.nav_home)      fragment = HomeFragment.newInstance(userEmail);
+            else if (id == R.id.nav_wallet)    fragment = new WalletFragment();
+            else if (id == R.id.nav_brokerage) fragment = new BrokerageFragment();
+            else if (id == R.id.nav_ai)        fragment = new AiFragment();
+            else if (id == R.id.nav_profile)   fragment = ProfileFragment.newInstance(userEmail);
+
+            if (fragment != null) {
+                // For main tabs, we clear the back stack so we don't pile up fragments
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                loadFragment(fragment, false);
+                return true;
+            }
             return false;
         });
 
         if (savedInstanceState == null) {
-            loadFragment(HomeFragment.newInstance(userEmail));
+            loadFragment(HomeFragment.newInstance(userEmail), false);
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
     }
 
-    public boolean loadFragment(Fragment fragment) {
-        getSupportFragmentManager()
+    /**
+     * Helper to load fragments. 
+     * @param addToBackStack true if this is a sub-page, false if it's a main tab.
+     */
+    public boolean loadFragment(Fragment fragment, boolean addToBackStack) {
+        var transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+                .replace(R.id.fragment_container, fragment);
+        
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        
+        transaction.commit();
         return true;
+    }
+
+    // Default loadFragment for backward compatibility with existing fragment calls
+    public boolean loadFragment(Fragment fragment) {
+        return loadFragment(fragment, true);
     }
 }

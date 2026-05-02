@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apexpay.R;
 import com.apexpay.models.Subscription;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapter.ViewHolder> {
 
-    private final ArrayList<Subscription> subscriptions;
+    private final List<Subscription> subscriptions;
 
-    public SubscriptionAdapter(ArrayList<Subscription> list) {
+    public SubscriptionAdapter(List<Subscription> list) {
         subscriptions = list;
     }
 
