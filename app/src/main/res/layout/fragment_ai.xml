@@ -126,7 +126,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_input_field"
             android:hint="Ask about any asset or risk…"
-            android:hintTextColor="#55637A"
+            android:textColorHint="#55637A"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:padding="12dp"
