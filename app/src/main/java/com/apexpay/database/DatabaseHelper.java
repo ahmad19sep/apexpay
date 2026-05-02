@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME    = "apexpay.db";
     private static final int    DB_VERSION = 4;
 
-    // ── portfolio ─────────────────────────────────────────────────────────────
+
     private static final String TABLE    = "portfolio";
     private static final String C_ID       = "id";
     private static final String C_SYMBOL   = "symbol";
@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String C_QUANTITY = "quantity";
     private static final String C_AVG      = "avg_buy_price";
 
-    // ── ledger ────────────────────────────────────────────────────────────────
+
     private static final String LEDGER    = "ledger";
     private static final String L_ID      = "id";
     private static final String L_ICON    = "icon";
@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String L_CREDIT  = "is_credit";
     private static final String L_CREATED = "created_at";
 
-    // ── contacts ──────────────────────────────────────────────────────────────
+
     private static final String CONTACTS   = "contacts";
     private static final String CO_ID      = "id";
     private static final String CO_NAME    = "name";
@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CO_COLOR   = "avatar_color";
     private static final String CO_USED    = "last_used";
 
-    // ── chat_messages ─────────────────────────────────────────────────────────
+
     private static final String CHAT      = "chat_messages";
     private static final String M_ID      = "id";
     private static final String M_ROLE    = "role";
@@ -104,7 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 4) createContactsTable(db);
     }
 
-    // ── Portfolio ─────────────────────────────────────────────────────────────
+
 
     public synchronized void buyAsset(String symbol, String name, String type,
                                       double quantity, double price) {
@@ -187,7 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return qty;
     }
 
-    // ── Ledger ────────────────────────────────────────────────────────────────
+
 
     public synchronized void insertLedger(String icon, String title,
                                           double amount, boolean isCredit) {
@@ -228,10 +228,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    /**
-     * Returns monthly ledger totals for the last {@code months} months.
-     * Result: float[months][2] — [0]=credits sum, [1]=debits sum, oldest first.
-     */
+
     public float[][] getMonthlyCashFlow(int months) {
         float[][] result = new float[months][2];
         SQLiteDatabase db = getReadableDatabase();
@@ -261,7 +258,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    // ── Chat ──────────────────────────────────────────────────────────────────
+
 
     public synchronized void insertMessage(String role, String content) {
         SQLiteDatabase db = getWritableDatabase();
@@ -296,9 +293,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // ── Contacts ──────────────────────────────────────────────────────────────
 
-    /** Inserts or updates a contact (keyed by account number). */
     public synchronized void upsertContact(String name, String accountNumber, String color) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -310,7 +305,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /** Returns up to 8 most recently used contacts. */
+
     public List<FrequentContact> getContacts() {
         List<FrequentContact> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -330,7 +325,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    /** Returns all ledger transactions (no limit). */
+
     public List<Transaction> getAllLedger() {
         return getRecentLedger(Integer.MAX_VALUE);
     }

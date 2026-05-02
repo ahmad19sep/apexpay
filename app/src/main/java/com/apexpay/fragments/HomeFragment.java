@@ -69,7 +69,6 @@ public class HomeFragment extends Fragment {
         if (rootView != null) refreshData();
     }
 
-    // ── Data refresh ─────────────────────────────────────────────────────────
 
     private void refreshData() {
         double walletCash     = getPrefsDouble("walletBalance", 0.0);
@@ -104,7 +103,7 @@ public class HomeFragment extends Fragment {
         rv.setAdapter(new TransactionAdapter(items));
     }
 
-    // ── UI setup ─────────────────────────────────────────────────────────────
+
 
     private void setupQuickActions() {
         rootView.findViewById(R.id.btnSend).setOnClickListener(v ->
@@ -130,7 +129,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+
 
     private double getPrefsDouble(String key, double defaultValue) {
         return Double.longBitsToDouble(

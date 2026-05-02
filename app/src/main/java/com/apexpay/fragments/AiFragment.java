@@ -26,6 +26,7 @@ import com.apexpay.network.AiApiService;
 import com.apexpay.network.NetworkClient;
 import com.apexpay.services.MarketDataService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +124,13 @@ public class AiFragment extends Fragment {
                             chatAdapter.addMessage(new ChatMessage(ChatMessage.ROLE_AI, reply));
                             scrollToBottom();
                         } else {
-                            String err = "Error " + response.code() + ": " + response.message();
+                            String body = "";
+                            try {
+                                if (response.errorBody() != null)
+                                    body = response.errorBody().string();
+                            } catch (IOException ignored) {}
+                            String err = "AI error " + response.code()
+                                    + (body.isEmpty() ? "" : ": " + body);
                             chatAdapter.addMessage(new ChatMessage(ChatMessage.ROLE_AI, err));
                             scrollToBottom();
                         }
@@ -159,7 +166,8 @@ public class AiFragment extends Fragment {
                         h.name, h.symbol, h.quantity, h.avgBuyPrice, price, pnl));
             }
             double portfolioPnl = totalValue - totalCost;
-            sb.append(String.format("Total Portfolio: $%,.2f | P&L: %+$,.2f\n\n", totalValue, portfolioPnl));
+            String pnlStr = (portfolioPnl >= 0 ? "+" : "-") + String.format("$%,.2f", Math.abs(portfolioPnl));
+            sb.append(String.format("Total Portfolio: $%,.2f | P&L: %s\n\n", totalValue, pnlStr));
         } else {
             sb.append("User has no holdings yet.\n\n");
         }

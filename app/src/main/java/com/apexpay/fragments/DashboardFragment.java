@@ -57,7 +57,7 @@ public class DashboardFragment extends Fragment {
         buildCashFlowChart(view);
     }
 
-    // ── Summary cards ─────────────────────────────────────────────────────────
+
 
     private void buildSummaryCards(View v) {
         List<Holding> holdings = db.getAllHoldings();
@@ -86,7 +86,6 @@ public class DashboardFragment extends Fragment {
                 .setText(holdings.size() + " positions");
     }
 
-    // ── Donut chart (portfolio allocation) ───────────────────────────────────
 
     private void buildDonutChart(View v) {
         PieChart chart = v.findViewById(R.id.pieChart);
@@ -155,7 +154,6 @@ public class DashboardFragment extends Fragment {
         chart.invalidate();
     }
 
-    // ── Cash flow bar chart (last 6 months) ───────────────────────────────────
 
     private void buildCashFlowChart(View v) {
         BarChart chart = v.findViewById(R.id.barChartCashFlow);

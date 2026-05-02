@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brokerage_bg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <!-- ── Header ──────────────────────────────────────────────────────────── -->
     <LinearLayout
@@ -33,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Powered by Grok"
+                android:text="Powered by Groq"
                 android:textSize="12sp"
                 android:textColor="#8892B0" />
 
@@ -126,8 +127,8 @@
             android:layout_weight="1"
             android:background="@drawable/bg_input_field"
             android:hint="Ask about any asset or risk…"
-            android:textColorHint="#55637A"
-            android:textColor="#FFFFFF"
+            android:textColorHint="@color/text_secondary"
+            android:textColor="@color/text_primary"
             android:textSize="14sp"
             android:padding="12dp"
             android:inputType="textMultiLine|textCapSentences"

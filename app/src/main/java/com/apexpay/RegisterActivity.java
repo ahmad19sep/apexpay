@@ -102,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void saveUserProfile(String uid, String name, String email) {
         String accountNumber = generateAccountNumber(uid);
 
-        // Save to SharedPreferences so wallet works immediately after first login
+
         SharedPreferences prefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
         prefs.edit()
                 .putString("holderName",    name)
@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .set(profile);
     }
 
-    /** Generates a deterministic 12-digit account number from the Firebase UID. */
+
     private String generateAccountNumber(String uid) {
         long hash = Math.abs(uid.hashCode());
         return String.format("APX-%04d-%04d-%04d",

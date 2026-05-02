@@ -37,10 +37,17 @@ public class SplashActivity extends AppCompatActivity {
     private void navigateNext() {
         SharedPreferences prefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+        boolean hasPin     = !prefs.getString("userPin", "").isEmpty();
 
-        Intent intent = isLoggedIn
-                ? new Intent(this, MainActivity.class)
-                : new Intent(this, LoginActivity.class);
+        Intent intent;
+        if (isLoggedIn && hasPin) {
+            intent = new Intent(this, PinActivity.class);
+            intent.putExtra("mode", PinActivity.MODE_VERIFY);
+        } else if (isLoggedIn) {
+            intent = new Intent(this, MainActivity.class);
+        } else {
+            intent = new Intent(this, LoginActivity.class);
+        }
 
         startActivity(intent);
         finish();
