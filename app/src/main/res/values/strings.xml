@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">ApexPay</string>
+
+    <!-- Navigation -->
+    <string name="back">Back</string>
+    <string name="send_money">Send Money</string>
+    <string name="receive_money">Receive Money</string>
+    <string name="top_up">Top Up</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="see_all">See All</string>
+
+    <!-- Wallet -->
+    <string name="available_balance">Available: %s</string>
+    <string name="recipient">Recipient</string>
+    <string name="enter_name_account">Enter name or account</string>
+    <string name="amount">Amount</string>
+    <string name="note_optional">Note (Optional)</string>
+    <string name="what_is_this_for">What is this for?</string>
+    <string name="your_qr_code">Your QR Code</string>
+    <string name="account_number_label">ApexPay Account Number</string>
+    <string name="share_account">Share My Account</string>
+    <string name="receive_desc">Others can scan your QR code or use your account number to send you money instantly.</string>
+    <string name="payment_source">Payment Source</string>
+    <string name="top_up_now">Top Up Now</string>
+
+    <!-- AI -->
+    <string name="ai_assistant">AI Financial Assistant</string>
+    <string name="ai_placeholder_msg">How can I help you with your finances today?</string>
+    <string name="ai_insight_title">Smart Insight</string>
+    <string name="ai_insight_msg">You spent 15% more on entertainment this week. Consider saving $50 to reach your monthly goal!</string>
+
 </resources>

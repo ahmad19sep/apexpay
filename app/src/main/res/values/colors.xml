@@ -12,4 +12,16 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="error">#D32F2F</color>
+
+    <!-- Brokerage dark theme -->
+    <color name="brokerage_bg">#0D0F1A</color>
+    <color name="brokerage_surface">#131523</color>
+    <color name="brokerage_card">#1A1C2E</color>
+    <color name="brokerage_card2">#22253A</color>
+    <color name="gain_green">#00C896</color>
+    <color name="loss_red">#FF5252</color>
+    <color name="text_on_dark">#FFFFFF</color>
+    <color name="text_on_dark_secondary">#8892B0</color>
+    <color name="accent_indigo">#6366F1</color>
+    <color name="accent_indigo_dim">#2D2F5A</color>
 </resources>

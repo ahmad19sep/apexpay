@@ -46,6 +46,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/ivNotifications"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_bell"
@@ -74,7 +75,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Balance"
+                    android:text="Total Net Worth"
                     android:textSize="13sp"
                     android:textColor="#B3FFFFFF" />
 
@@ -110,7 +111,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="↑  Income"
+                            android:text="↑  Cash"
                             android:textSize="12sp"
                             android:textColor="#B3FFFFFF" />
 
@@ -136,7 +137,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="↓  Expenses"
+                            android:text="↓  Portfolio"
                             android:textSize="12sp"
                             android:textColor="#B3FFFFFF" />
 

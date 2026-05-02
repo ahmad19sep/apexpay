@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brokerage_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
+
+        <!-- ── Top bar ───────────────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/btnDetailBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="←"
+                android:textSize="22sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="12dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDetailSymbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvDetailName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="#8892B0" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvDetailType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="#6366F1"
+                android:background="#2D2F5A"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp" />
+
+        </LinearLayout>
+
+        <!-- ── Price block ───────────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvDetailPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tvDetailChange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <!-- ── Time range selector ───────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView android:id="@+id/btn1D"
+                android:layout_width="0dp" android:layout_height="32dp"
+                android:layout_weight="1" android:gravity="center"
+                android:text="1D" android:textSize="12sp"
+                android:textStyle="bold" android:textColor="#FFFFFF"
+                android:background="@drawable/bg_time_btn_active"
+                android:layout_marginEnd="4dp"/>
+
+            <TextView android:id="@+id/btn1W"
+                android:layout_width="0dp" android:layout_height="32dp"
+                android:layout_weight="1" android:gravity="center"
+                android:text="1W" android:textSize="12sp"
+                android:textColor="#8892B0"
+                android:background="@drawable/bg_time_btn_inactive"
+                android:layout_marginEnd="4dp"/>
+
+            <TextView android:id="@+id/btn1M"
+                android:layout_width="0dp" android:layout_height="32dp"
+                android:layout_weight="1" android:gravity="center"
+                android:text="1M" android:textSize="12sp"
+                android:textColor="#8892B0"
+                android:background="@drawable/bg_time_btn_inactive"
+                android:layout_marginEnd="4dp"/>
+
+            <TextView android:id="@+id/btn3M"
+                android:layout_width="0dp" android:layout_height="32dp"
+                android:layout_weight="1" android:gravity="center"
+                android:text="3M" android:textSize="12sp"
+                android:textColor="#8892B0"
+                android:background="@drawable/bg_time_btn_inactive"
+                android:layout_marginEnd="4dp"/>
+
+            <TextView android:id="@+id/btn1Y"
+                android:layout_width="0dp" android:layout_height="32dp"
+                android:layout_weight="1" android:gravity="center"
+                android:text="1Y" android:textSize="12sp"
+                android:textColor="#8892B0"
+                android:background="@drawable/bg_time_btn_inactive"/>
+
+        </LinearLayout>
+
+        <!-- ── Candlestick chart ─────────────────────────────────────────── -->
+        <com.github.mikephil.charting.charts.CandleStickChart
+            android:id="@+id/candlestickChart"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- ── Volume label ──────────────────────────────────────────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volume"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#8892B0"
+            android:paddingHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- ── Volume bar chart ──────────────────────────────────────────── -->
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/volumeBarChart"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ── Market stats ──────────────────────────────────────────────── -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="@color/brokerage_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Market Statistics"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Row 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Market Cap" android:textSize="11sp" android:textColor="#8892B0"/>
+                        <TextView android:id="@+id/tvMarketCap" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#FFFFFF" android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Volume 24h" android:textSize="11sp" android:textColor="#8892B0"/>
+                        <TextView android:id="@+id/tvVolume24h" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#FFFFFF" android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Row 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="52W High" android:textSize="11sp" android:textColor="#8892B0"/>
+                        <TextView android:id="@+id/tvHigh52w" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#00C896" android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="52W Low" android:textSize="11sp" android:textColor="#8892B0"/>
+                        <TextView android:id="@+id/tvLow52w" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#FF5252" android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Row 3 (P/E only for stocks/ETFs) -->
+                <LinearLayout
+                    android:id="@+id/rowPeRatio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="P/E Ratio" android:textSize="11sp" android:textColor="#8892B0"/>
+                        <TextView android:id="@+id/tvPeRatio" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#FFFFFF" android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Your Holdings" android:textSize="11sp" android:textColor="#8892B0"/>
+                        <TextView android:id="@+id/tvYourHolding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#6366F1" android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── Action buttons ────────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <Button
+                android:id="@+id/btnMockBuy"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="Mock Buy"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_buy_btn"
+                android:stateListAnimator="@null"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnMockSell"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="Mock Sell"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_sell_btn"
+                android:stateListAnimator="@null"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -19,13 +19,13 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_home"
-            android:contentDescription="Back" />
+            android:contentDescription="@string/back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Send Money"
+            android:text="@string/send_money"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Available: $0.00"
+                android:text="@string/available_balance"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Recipient"
+                android:text="@string/recipient"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -67,7 +67,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_input_field"
-                android:hint="Enter name or account"
+                android:hint="@string/enter_name_account"
                 android:inputType="text"
                 android:paddingHorizontal="16dp" />
 
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Amount"
+                android:text="@string/amount"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -163,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Note (Optional)"
+                android:text="@string/note_optional"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -174,7 +174,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_input_field"
-                android:hint="What is this for?"
+                android:hint="@string/what_is_this_for"
                 android:inputType="text"
                 android:paddingHorizontal="16dp" />
 
@@ -187,7 +187,7 @@
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/primary"
-        android:text="Send Money"
+        android:text="@string/send_money"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:cornerRadius="12dp" />
