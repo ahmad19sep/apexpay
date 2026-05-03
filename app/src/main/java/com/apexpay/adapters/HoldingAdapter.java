@@ -1,12 +1,12 @@
 package com.apexpay.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apexpay.R;
@@ -29,7 +29,9 @@ public class HoldingAdapter extends RecyclerView.Adapter<HoldingAdapter.VH> {
         notifyDataSetChanged();
     }
 
-    public void setOnHoldingClickListener(OnHoldingClickListener l) { listener = l; }
+    public void setOnHoldingClickListener(OnHoldingClickListener l) {
+        listener = l;
+    }
 
     @NonNull
     @Override
@@ -44,12 +46,11 @@ public class HoldingAdapter extends RecyclerView.Adapter<HoldingAdapter.VH> {
         Holding holding = items.get(pos);
 
         h.tvIcon.setText(holding.symbol.substring(0, 1));
-        h.tvIcon.setBackgroundColor(iconColor(holding.assetType));
+        h.tvIcon.setBackgroundColor(iconColor(h.itemView, holding.assetType));
 
         h.tvSymbol.setText(holding.symbol);
         h.tvName.setText(holding.name);
 
-        // Format quantity: show up to 6 decimal places for crypto, 4 for stocks
         if (holding.quantity < 1) {
             h.tvQty.setText(String.format("%.6f %s", holding.quantity, holding.symbol));
         } else {
@@ -58,39 +59,58 @@ public class HoldingAdapter extends RecyclerView.Adapter<HoldingAdapter.VH> {
 
         h.tvValue.setText(String.format("$%,.2f", holding.getTotalValue()));
 
-        double pnl    = holding.getProfitLoss();
+        double pnl = holding.getProfitLoss();
         double pnlPct = holding.getProfitLossPct();
-        boolean gain  = pnl >= 0;
-        String pnlSign = gain ? "+" : "-";
+        boolean gain = pnl >= 0;
+        String pnlSign;
+        if (gain) {
+            pnlSign = "+";
+        } else {
+            pnlSign = "-";
+        }
         h.tvPnl.setText(String.format("%s$%,.2f (%.2f%%)", pnlSign, Math.abs(pnl), Math.abs(pnlPct)));
-        h.tvPnl.setTextColor(gain
-                ? Color.parseColor("#00C896")
-                : Color.parseColor("#FF5252"));
+        if (gain) {
+            h.tvPnl.setTextColor(ContextCompat.getColor(h.itemView.getContext(), R.color.gain_green));
+        } else {
+            h.tvPnl.setTextColor(ContextCompat.getColor(h.itemView.getContext(), R.color.loss_red));
+        }
 
-        h.itemView.setOnClickListener(v -> { if (listener != null) listener.onHoldingClick(holding); });
+        h.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onHoldingClick(holding);
+                }
+            }
+        });
     }
 
     @Override
-    public int getItemCount() { return items.size(); }
+    public int getItemCount() {
+        return items.size();
+    }
 
-    private int iconColor(String type) {
-        switch (type) {
-            case "Crypto": return Color.parseColor("#2D2F5A");
-            case "Stock":  return Color.parseColor("#1A2E4A");
-            default:       return Color.parseColor("#1A3030");
+    private int iconColor(View itemView, String type) {
+        if ("Crypto".equals(type)) {
+            return ContextCompat.getColor(itemView.getContext(), R.color.holding_crypto_bg);
+        } else if ("Stock".equals(type)) {
+            return ContextCompat.getColor(itemView.getContext(), R.color.holding_stock_bg);
+        } else {
+            return ContextCompat.getColor(itemView.getContext(), R.color.holding_etf_bg);
         }
     }
 
     static class VH extends RecyclerView.ViewHolder {
         TextView tvIcon, tvSymbol, tvName, tvQty, tvValue, tvPnl;
+
         VH(@NonNull View v) {
             super(v);
-            tvIcon   = v.findViewById(R.id.tvHoldingIcon);
+            tvIcon = v.findViewById(R.id.tvHoldingIcon);
             tvSymbol = v.findViewById(R.id.tvHoldingSymbol);
-            tvName   = v.findViewById(R.id.tvHoldingName);
-            tvQty    = v.findViewById(R.id.tvHoldingQty);
-            tvValue  = v.findViewById(R.id.tvHoldingValue);
-            tvPnl    = v.findViewById(R.id.tvHoldingPnl);
+            tvName = v.findViewById(R.id.tvHoldingName);
+            tvQty = v.findViewById(R.id.tvHoldingQty);
+            tvValue = v.findViewById(R.id.tvHoldingValue);
+            tvPnl = v.findViewById(R.id.tvHoldingPnl);
         }
     }
 }

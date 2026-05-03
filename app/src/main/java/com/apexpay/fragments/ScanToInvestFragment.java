@@ -41,22 +41,44 @@ public class ScanToInvestFragment extends Fragment {
 
     private static final int CAMERA_PERMISSION_CODE = 101;
 
-    // Brand/product label → ticker mapping
+    // Brand/product label → ticker mapping (includes both brand names and MLKit generic labels)
     private static final Map<String, String> BRAND_MAP = new HashMap<String, String>() {{
-        put("apple",    "AAPL"); put("macbook",  "AAPL"); put("iphone",   "AAPL");
-        put("ipad",     "AAPL"); put("imac",     "AAPL"); put("airpods",  "AAPL");
-        put("microsoft","MSFT"); put("windows",  "MSFT"); put("xbox",     "MSFT");
-        put("surface",  "MSFT");
-        put("google",   "GOOGL"); put("alphabet","GOOGL"); put("android", "GOOGL");
-        put("youtube",  "GOOGL"); put("pixel",   "GOOGL");
-        put("amazon",   "AMZN"); put("alexa",    "AMZN"); put("kindle",   "AMZN");
-        put("tesla",    "TSLA"); put("model s",  "TSLA"); put("model 3",  "TSLA");
-        put("nvidia",   "NVDA"); put("geforce",  "NVDA"); put("rtx",      "NVDA");
-        put("meta",     "META"); put("facebook", "META"); put("instagram","META");
-        put("whatsapp", "META");
-        put("netflix",  "NFLX");
-        put("bitcoin",  "BTC");  put("btc",      "BTC");
-        put("ethereum", "ETH");  put("eth",       "ETH");
+        // Apple devices — MLKit may return these specific labels
+        put("apple",      "AAPL"); put("macbook",     "AAPL"); put("iphone",   "AAPL");
+        put("ipad",       "AAPL"); put("imac",        "AAPL"); put("airpods",  "AAPL");
+        put("mac",        "AAPL"); put("macintosh",   "AAPL"); put("ios",      "AAPL");
+        // Smartphones / laptops → AAPL as most recognisable in demo context
+        put("smartphone", "AAPL"); put("mobile phone","AAPL"); put("iphone x","AAPL");
+        put("earphone",   "AAPL"); put("earbuds",     "AAPL"); put("tablet",   "AAPL");
+        // Microsoft
+        put("microsoft",  "MSFT"); put("windows",  "MSFT"); put("xbox",     "MSFT");
+        put("surface",    "MSFT"); put("office",   "MSFT"); put("laptop",   "MSFT");
+        put("computer",   "MSFT");
+        // Google / Alphabet
+        put("google",     "GOOGL"); put("alphabet","GOOGL"); put("android", "GOOGL");
+        put("youtube",    "GOOGL"); put("pixel",   "GOOGL");
+        // Amazon
+        put("amazon",     "AMZN"); put("alexa",    "AMZN"); put("kindle",   "AMZN");
+        put("echo",       "AMZN"); put("fire",     "AMZN");
+        // Tesla
+        put("tesla",      "TSLA"); put("model s",  "TSLA"); put("model 3",  "TSLA");
+        put("electric car","TSLA"); put("electric vehicle","TSLA"); put("ev","TSLA");
+        put("automobile", "TSLA"); put("car",      "TSLA"); put("vehicle",  "TSLA");
+        // NVIDIA
+        put("nvidia",     "NVDA"); put("geforce",  "NVDA"); put("rtx",      "NVDA");
+        put("gpu",        "NVDA"); put("graphics", "NVDA");
+        // Meta
+        put("meta",       "META"); put("facebook", "META"); put("instagram","META");
+        put("whatsapp",   "META"); put("oculus",   "META"); put("vr headset","META");
+        // Netflix
+        put("netflix",    "NFLX"); put("streaming","NFLX");
+        // Crypto
+        put("bitcoin",    "BTC");  put("btc",       "BTC"); put("coin",     "BTC");
+        put("ethereum",   "ETH");  put("eth",        "ETH"); put("crypto",   "BTC");
+        put("cryptocurrency","BTC");
+        // Nike — running shoes
+        put("nike",       "NKE"); put("running shoe","NKE"); put("sneaker",  "NKE");
+        put("shoe",       "NKE"); put("footwear",    "NKE");
     }};
 
     private PreviewView  previewView;
@@ -97,7 +119,7 @@ public class ScanToInvestFragment extends Fragment {
 
         cameraExecutor = Executors.newSingleThreadExecutor();
         labeler = ImageLabeling.getClient(
-                new ImageLabelerOptions.Builder().setConfidenceThreshold(0.65f).build());
+                new ImageLabelerOptions.Builder().setConfidenceThreshold(0.5f).build());
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -149,19 +171,30 @@ public class ScanToInvestFragment extends Fragment {
 
         labeler.process(image)
                 .addOnSuccessListener(labels -> {
+                    String matchedTicker = null;
                     for (ImageLabel label : labels) {
-                        String key = label.getText().toLowerCase();
-                        String ticker = findTicker(key);
-                        if (ticker != null) {
-                            detected = true;
-                            String finalTicker = ticker;
-                            android.app.Activity act = getActivity();
-                            if (act != null) {
-                                act.runOnUiThread(() -> {
-                                    if (isAdded()) showResult(finalTicker);
-                                });
+                        // Check full label text and each word in it
+                        String fullText = label.getText().toLowerCase();
+                        String ticker = findTicker(fullText);
+                        if (ticker == null) {
+                            for (String word : fullText.split("\\s+")) {
+                                ticker = findTicker(word);
+                                if (ticker != null) break;
                             }
+                        }
+                        if (ticker != null) {
+                            matchedTicker = ticker;
                             break;
+                        }
+                    }
+                    if (matchedTicker != null) {
+                        detected = true;
+                        final String finalTicker = matchedTicker;
+                        android.app.Activity act = getActivity();
+                        if (act != null) {
+                            act.runOnUiThread(() -> {
+                                if (isAdded()) showResult(finalTicker);
+                            });
                         }
                     }
                 })

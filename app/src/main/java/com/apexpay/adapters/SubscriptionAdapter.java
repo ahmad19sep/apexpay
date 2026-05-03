@@ -39,7 +39,8 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return subscriptions.size();
     }
 

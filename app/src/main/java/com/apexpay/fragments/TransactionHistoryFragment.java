@@ -1,6 +1,5 @@
 package com.apexpay.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,10 +23,10 @@ import java.util.List;
 
 public class TransactionHistoryFragment extends Fragment {
 
-    private DatabaseHelper      db;
-    private List<Transaction>   allTransactions;
-    private int                 selectedFilter = 0; // 0=All, 1=Sent, 2=Received, 3=Deposits
-    private View                rootView;
+    private DatabaseHelper db;
+    private List<Transaction> allTransactions;
+    private int selectedFilter = 0;
+    private View rootView;
 
     @Nullable
     @Override
@@ -35,8 +35,12 @@ public class TransactionHistoryFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_transaction_history, container, false);
         db = new DatabaseHelper(requireContext());
 
-        rootView.findViewById(R.id.btnBack).setOnClickListener(v ->
-                requireActivity().getSupportFragmentManager().popBackStack());
+        rootView.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
 
         loadFromDatabase();
         setupFilterChips();
@@ -54,10 +58,13 @@ public class TransactionHistoryFragment extends Fragment {
         for (int i = 0; i < chipIds.length; i++) {
             final int filter = i;
             TextView chip = rootView.findViewById(chipIds[i]);
-            chip.setOnClickListener(v -> {
-                selectedFilter = filter;
-                updateChipStyles(chipIds, filter);
-                applyFilter();
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedFilter = filter;
+                    updateChipStyles(chipIds, filter);
+                    applyFilter();
+                }
             });
         }
         updateChipStyles(chipIds, 0);
@@ -68,10 +75,10 @@ public class TransactionHistoryFragment extends Fragment {
             TextView chip = rootView.findViewById(chipIds[i]);
             if (i == selected) {
                 chip.setBackgroundResource(R.drawable.bg_chip_selected);
-                chip.setTextColor(Color.WHITE);
+                chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
             } else {
                 chip.setBackgroundResource(R.drawable.bg_chip_unselected);
-                chip.setTextColor(Color.parseColor("#8892B0"));
+                chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             }
         }
     }
@@ -91,10 +98,24 @@ public class TransactionHistoryFragment extends Fragment {
         List<Transaction> result = new ArrayList<>();
         for (Transaction t : allTransactions) {
             switch (selectedFilter) {
-                case 0: result.add(t); break;
-                case 1: if (!t.isCredit) result.add(t); break;
-                case 2: if (t.isCredit && !isDeposit(t.title)) result.add(t); break;
-                case 3: if (t.isCredit && isDeposit(t.title)) result.add(t); break;
+                case 0:
+                    result.add(t);
+                    break;
+                case 1:
+                    if (!t.isCredit) {
+                        result.add(t);
+                    }
+                    break;
+                case 2:
+                    if (t.isCredit && !isDeposit(t.title)) {
+                        result.add(t);
+                    }
+                    break;
+                case 3:
+                    if (t.isCredit && isDeposit(t.title)) {
+                        result.add(t);
+                    }
+                    break;
             }
         }
         return result;

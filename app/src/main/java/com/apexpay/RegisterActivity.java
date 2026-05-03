@@ -3,6 +3,7 @@ package com.apexpay;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,10 +25,10 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText     etName, etEmail, etPassword, etConfirmPassword;
-    private Button       btnRegister;
-    private TextView     tvGoToLogin;
-    private ProgressBar  progressBar;
+    private EditText etName, etEmail, etPassword, etConfirmPassword;
+    private Button btnRegister;
+    private TextView tvGoToLogin;
+    private ProgressBar progressBar;
     private FirebaseAuth mAuth;
 
     @Override
@@ -36,93 +38,172 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        etName            = findViewById(R.id.etName);
-        etEmail           = findViewById(R.id.etEmail);
-        etPassword        = findViewById(R.id.etPassword);
+        etName = findViewById(R.id.etName);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
-        btnRegister       = findViewById(R.id.btnRegister);
-        tvGoToLogin       = findViewById(R.id.tvGoToLogin);
-        progressBar       = findViewById(R.id.progressBar);
+        btnRegister = findViewById(R.id.btnRegister);
+        tvGoToLogin = findViewById(R.id.tvGoToLogin);
+        progressBar = findViewById(R.id.progressBar);
 
-        btnRegister.setOnClickListener(v -> attemptRegister());
-        tvGoToLogin.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptRegister();
+            }
+        });
+
+        tvGoToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+
+        setupPasswordToggles();
+    }
+
+    private void setupPasswordToggles() {
+        TextView btnTogglePw = findViewById(R.id.btnTogglePassword);
+        TextView btnToggleCnf = findViewById(R.id.btnToggleConfirmPassword);
+
+        final boolean[] show = {false, false};
+
+        btnTogglePw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show[0] = !show[0];
+                int inputType;
+                if (show[0]) {
+                    inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+                } else {
+                    inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+                }
+                etPassword.setInputType(inputType);
+                etPassword.setSelection(etPassword.getText().length());
+                float alpha;
+                if (show[0]) {
+                    alpha = 1f;
+                } else {
+                    alpha = 0.5f;
+                }
+                btnTogglePw.setAlpha(alpha);
+            }
+        });
+
+        btnToggleCnf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show[1] = !show[1];
+                int inputType;
+                if (show[1]) {
+                    inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+                } else {
+                    inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+                }
+                etConfirmPassword.setInputType(inputType);
+                etConfirmPassword.setSelection(etConfirmPassword.getText().length());
+                float alpha;
+                if (show[1]) {
+                    alpha = 1f;
+                } else {
+                    alpha = 0.5f;
+                }
+                btnToggleCnf.setAlpha(alpha);
+            }
         });
     }
 
     private void attemptRegister() {
-        String name            = etName.getText().toString().trim();
-        String email           = etEmail.getText().toString().trim();
-        String password        = etPassword.getText().toString().trim();
+        String name = etName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(name)) {
-            etName.setError("Full name is required"); etName.requestFocus(); return;
+            etName.setError(getString(R.string.error_full_name_required));
+            etName.requestFocus();
+            return;
         }
         if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email is required"); etEmail.requestFocus(); return;
+            etEmail.setError(getString(R.string.error_email_required));
+            etEmail.requestFocus();
+            return;
         }
         if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required"); etPassword.requestFocus(); return;
+            etPassword.setError(getString(R.string.error_password_required));
+            etPassword.requestFocus();
+            return;
         }
         if (password.length() < 6) {
-            etPassword.setError("Minimum 6 characters"); etPassword.requestFocus(); return;
+            etPassword.setError(getString(R.string.error_min_6_chars));
+            etPassword.requestFocus();
+            return;
         }
         if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Passwords do not match"); etConfirmPassword.requestFocus(); return;
+            etConfirmPassword.setError(getString(R.string.error_passwords_no_match));
+            etConfirmPassword.requestFocus();
+            return;
         }
 
         progressBar.setVisibility(View.VISIBLE);
         btnRegister.setEnabled(false);
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    progressBar.setVisibility(View.GONE);
-                    btnRegister.setEnabled(true);
+                .addOnCompleteListener(this, new com.google.android.gms.tasks.OnCompleteListener<com.google.firebase.auth.AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<com.google.firebase.auth.AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+                        btnRegister.setEnabled(true);
 
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            saveUserProfile(user.getUid(), name, email);
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                saveUserProfile(user.getUid(), name, email);
+                            }
+                            Toast.makeText(RegisterActivity.this, getString(R.string.toast_account_created), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            intent.putExtra("registeredEmail", email);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            String message;
+                            if (task.getException() != null) {
+                                message = task.getException().getMessage();
+                            } else {
+                                message = "Registration failed. Please try again.";
+                            }
+                            showErrorDialog(message);
                         }
-                        Toast.makeText(this, "Account created! Please login.", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(this, LoginActivity.class);
-                        intent.putExtra("registeredEmail", email);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        showErrorDialog(task.getException() != null
-                                ? task.getException().getMessage()
-                                : "Registration failed. Please try again.");
                     }
                 });
     }
 
     private void saveUserProfile(String uid, String name, String email) {
         String accountNumber = generateAccountNumber(uid);
-
+        double startingBalance = 5000.0;
 
         SharedPreferences prefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
         prefs.edit()
-                .putString("holderName",    name)
+                .putString("holderName", name)
                 .putString("accountNumber", accountNumber)
-                .putString("userEmail",     email)
-                .putLong("walletBalance",   Double.doubleToLongBits(0.0))
+                .putString("userEmail", email)
+                .putLong("walletBalance", Double.doubleToLongBits(startingBalance))
+                .putBoolean("biometricEnabled", false)
                 .apply();
 
-        // Save to Firestore so other users can send money to this account
         Map<String, Object> profile = new HashMap<>();
-        profile.put("name",          name);
-        profile.put("email",         email);
+        profile.put("name", name);
+        profile.put("email", email);
         profile.put("accountNumber", accountNumber);
+        profile.put("walletBalance", startingBalance);
 
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(uid)
                 .set(profile);
     }
-
 
     private String generateAccountNumber(String uid) {
         long hash = Math.abs(uid.hashCode());
@@ -134,9 +215,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void showErrorDialog(String message) {
         new AlertDialog.Builder(this)
-                .setTitle("Registration Failed")
+                .setTitle(getString(R.string.dialog_title_registration_failed))
                 .setMessage(message)
-                .setPositiveButton("OK", null)
+                .setPositiveButton(getString(R.string.dialog_btn_ok), null)
                 .show();
     }
 }

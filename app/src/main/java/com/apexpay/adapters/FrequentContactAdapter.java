@@ -47,10 +47,16 @@ public class FrequentContactAdapter extends RecyclerView.Adapter<FrequentContact
         try {
             holder.tvInitials.setBackgroundTintList(
                     android.content.res.ColorStateList.valueOf(Color.parseColor(contact.avatarColor)));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onContactClicked(contact);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onContactClicked(contact);
+                }
+            }
         });
     }
 
@@ -65,7 +71,7 @@ public class FrequentContactAdapter extends RecyclerView.Adapter<FrequentContact
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvInitials = itemView.findViewById(R.id.tvInitials);
-            tvName     = itemView.findViewById(R.id.tvContactName);
+            tvName = itemView.findViewById(R.id.tvContactName);
         }
     }
 }

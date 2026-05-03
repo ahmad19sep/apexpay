@@ -1,7 +1,6 @@
 package com.apexpay.fragments;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,11 +42,11 @@ public class HomeFragment extends Fragment {
 
     private static final String ARG_EMAIL = "email";
 
-    private View              rootView;
-    private DatabaseHelper    db;
+    private View rootView;
+    private DatabaseHelper db;
     private SharedPreferences prefs;
-    private PieChart          pieChart;
-    private BarChart          barChart;
+    private PieChart pieChart;
+    private BarChart barChart;
 
     public static HomeFragment newInstance(String email) {
         HomeFragment fragment = new HomeFragment();
@@ -61,13 +61,28 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        db       = new DatabaseHelper(requireContext());
-        prefs    = requireActivity().getSharedPreferences("ApexPayPrefs", android.content.Context.MODE_PRIVATE);
+        db = new DatabaseHelper(requireContext());
+        prefs = requireActivity().getSharedPreferences("ApexPayPrefs", android.content.Context.MODE_PRIVATE);
 
-        String email = getArguments() != null ? getArguments().getString(ARG_EMAIL, "") : "";
-        String name  = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
+        String email;
+        if (getArguments() != null) {
+            email = getArguments().getString(ARG_EMAIL, "");
+        } else {
+            email = "";
+        }
+        String name;
+        if (email.contains("@")) {
+            name = email.substring(0, email.indexOf("@"));
+        } else {
+            name = email;
+        }
         String saved = prefs.getString("holderName", name);
-        String displayName = (saved != null && !saved.isEmpty()) ? saved : capitalize(name);
+        String displayName;
+        if (saved != null && !saved.isEmpty()) {
+            displayName = saved;
+        } else {
+            displayName = capitalize(name);
+        }
 
         rootView.<TextView>findViewById(R.id.tvGreeting).setText(getGreeting());
         rootView.<TextView>findViewById(R.id.tvUserName).setText(displayName);
@@ -85,14 +100,16 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (rootView != null) refreshData();
+        if (rootView != null) {
+            refreshData();
+        }
     }
 
     private void refreshData() {
-        double walletCash     = getPrefsDouble("walletBalance", 0.0);
-        double simCash        = getPrefsDouble("simCash", 10000.0);
+        double walletCash = getPrefsDouble("walletBalance", 0.0);
+        double simCash = getPrefsDouble("simCash", 10000.0);
         double portfolioValue = computePortfolioValue();
-        double totalNetWorth  = walletCash + simCash + portfolioValue;
+        double totalNetWorth = walletCash + simCash + portfolioValue;
 
         rootView.<TextView>findViewById(R.id.tvBalance)
                 .setText(String.format("$%,.2f", totalNetWorth));
@@ -110,7 +127,15 @@ public class HomeFragment extends Fragment {
         double total = 0;
         for (Holding h : db.getAllHoldings()) {
             Asset a = MarketDataService.getAsset(h.symbol);
-            if (a != null) total += h.quantity * (a.price > 0 ? a.price : h.avgBuyPrice);
+            if (a != null) {
+                double price;
+                if (a.price > 0) {
+                    price = a.price;
+                } else {
+                    price = h.avgBuyPrice;
+                }
+                total += h.quantity * price;
+            }
         }
         return total;
     }
@@ -122,28 +147,46 @@ public class HomeFragment extends Fragment {
         rv.setAdapter(new TransactionAdapter(items));
     }
 
-    // ── Allocation PieChart ───────────────────────────────────────────────────
-
     private void renderAllocationChart(double cashBalance, double portfolioValue) {
-        if (pieChart == null) return;
+        if (pieChart == null) {
+            return;
+        }
 
-        // Split portfolio into stocks vs crypto
-        double stocks = 0, crypto = 0;
+        double stocks = 0;
+        double crypto = 0;
         for (Holding h : db.getAllHoldings()) {
             Asset a = MarketDataService.getAsset(h.symbol);
-            double val = h.quantity * (a != null && a.price > 0 ? a.price : h.avgBuyPrice);
-            if (Asset.TYPE_CRYPTO.equals(h.assetType)) crypto += val;
-            else stocks += val;
+            double val;
+            if (a != null && a.price > 0) {
+                val = h.quantity * a.price;
+            } else {
+                val = h.quantity * h.avgBuyPrice;
+            }
+            if (Asset.TYPE_CRYPTO.equals(h.assetType)) {
+                crypto += val;
+            } else {
+                stocks += val;
+            }
         }
 
         double total = cashBalance + portfolioValue;
-        if (total <= 0) total = 1; // avoid division by zero
+        if (total <= 0) {
+            total = 1;
+        }
 
         List<PieEntry> entries = new ArrayList<>();
-        if (stocks > 0)      entries.add(new PieEntry((float) (stocks / total * 100), "Stocks"));
-        if (crypto > 0)      entries.add(new PieEntry((float) (crypto / total * 100), "Crypto"));
-        if (cashBalance > 0) entries.add(new PieEntry((float) (cashBalance / total * 100), "Cash"));
-        if (entries.isEmpty()) entries.add(new PieEntry(100f, "No data"));
+        if (stocks > 0) {
+            entries.add(new PieEntry((float) (stocks / total * 100), "Stocks"));
+        }
+        if (crypto > 0) {
+            entries.add(new PieEntry((float) (crypto / total * 100), "Crypto"));
+        }
+        if (cashBalance > 0) {
+            entries.add(new PieEntry((float) (cashBalance / total * 100), "Cash"));
+        }
+        if (entries.isEmpty()) {
+            entries.add(new PieEntry(100f, "No data"));
+        }
 
         PieDataSet dataset = new PieDataSet(entries, "");
         dataset.setColors(0x886366F1, 0x8800C896, 0x888892B0, 0xAAFF5252);
@@ -153,16 +196,16 @@ public class HomeFragment extends Fragment {
         PieData data = new PieData(dataset);
 
         pieChart.setData(data);
-        pieChart.setBackgroundColor(Color.TRANSPARENT);
+        pieChart.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         pieChart.getDescription().setEnabled(false);
         pieChart.getLegend().setEnabled(false);
         pieChart.setDrawHoleEnabled(true);
         pieChart.setHoleRadius(55f);
         pieChart.setTransparentCircleRadius(60f);
-        pieChart.setHoleColor(Color.parseColor("#131523"));
-        pieChart.setTransparentCircleColor(Color.parseColor("#131523"));
+        pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.surface));
+        pieChart.setTransparentCircleColor(ContextCompat.getColor(requireContext(), R.color.surface));
         pieChart.setCenterText(String.format("$%,.0f", total));
-        pieChart.setCenterTextColor(Color.WHITE);
+        pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.white));
         pieChart.setCenterTextSize(12f);
         pieChart.setRotationEnabled(false);
         pieChart.setTouchEnabled(false);
@@ -170,14 +213,14 @@ public class HomeFragment extends Fragment {
         pieChart.invalidate();
     }
 
-    // ── Cash Flow BarChart ────────────────────────────────────────────────────
-
     private void renderCashFlowChart() {
-        if (barChart == null) return;
+        if (barChart == null) {
+            return;
+        }
 
         float[][] flow = db.getMonthlyCashFlow(6);
 
-        List<BarEntry> inEntries  = new ArrayList<>();
+        List<BarEntry> inEntries = new ArrayList<>();
         List<BarEntry> outEntries = new ArrayList<>();
 
         for (int i = 0; i < flow.length; i++) {
@@ -185,21 +228,23 @@ public class HomeFragment extends Fragment {
             outEntries.add(new BarEntry(i, flow[i][1]));
         }
 
-        BarDataSet inSet  = new BarDataSet(inEntries, "In");
+        BarDataSet inSet = new BarDataSet(inEntries, "In");
         BarDataSet outSet = new BarDataSet(outEntries, "Out");
 
-        inSet.setColor(Color.parseColor("#6366F1"));
+        inSet.setColor(ContextCompat.getColor(requireContext(), R.color.primary));
         inSet.setDrawValues(false);
-        outSet.setColor(Color.parseColor("#FF5252"));
+        outSet.setColor(ContextCompat.getColor(requireContext(), R.color.loss_red));
         outSet.setDrawValues(false);
 
         BarData barData = new BarData(inSet, outSet);
-        float groupSpace = 0.2f, barSpace = 0.02f, barWidth = 0.38f;
+        float groupSpace = 0.2f;
+        float barSpace = 0.02f;
+        float barWidth = 0.38f;
         barData.setBarWidth(barWidth);
 
         barChart.setData(barData);
         barChart.groupBars(0f, groupSpace, barSpace);
-        barChart.setBackgroundColor(Color.TRANSPARENT);
+        barChart.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         barChart.getDescription().setEnabled(false);
         barChart.getLegend().setEnabled(false);
         barChart.setDrawGridBackground(false);
@@ -207,15 +252,15 @@ public class HomeFragment extends Fragment {
         XAxis x = barChart.getXAxis();
         x.setPosition(XAxis.XAxisPosition.BOTTOM);
         x.setDrawGridLines(false);
-        x.setTextColor(Color.parseColor("#8892B0"));
+        x.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
         x.setTextSize(9f);
         x.setDrawLabels(false);
         x.setAxisMinimum(0f);
         x.setAxisMaximum(6f);
 
         YAxis left = barChart.getAxisLeft();
-        left.setTextColor(Color.parseColor("#8892B0"));
-        left.setGridColor(Color.parseColor("#22253A"));
+        left.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+        left.setGridColor(ContextCompat.getColor(requireContext(), R.color.divider));
         left.setTextSize(9f);
         left.setAxisMinimum(0f);
         barChart.getAxisRight().setEnabled(false);
@@ -225,24 +270,50 @@ public class HomeFragment extends Fragment {
         barChart.invalidate();
     }
 
-    // ── Navigation ────────────────────────────────────────────────────────────
-
     private void setupQuickActions() {
-        rootView.findViewById(R.id.btnSend).setOnClickListener(v ->
-                navigateTo(new SendMoneyFragment()));
-        rootView.findViewById(R.id.btnReceive).setOnClickListener(v ->
-                navigateTo(new ReceiveMoneyFragment()));
-        rootView.findViewById(R.id.btnTopUp).setOnClickListener(v ->
-                navigateTo(new TopUpFragment()));
-        rootView.findViewById(R.id.btnScan).setOnClickListener(v ->
-                navigateTo(new TransactionHistoryFragment()));
+        rootView.findViewById(R.id.btnSend).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(new SendMoneyFragment());
+            }
+        });
+
+        rootView.findViewById(R.id.btnReceive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(new ReceiveMoneyFragment());
+            }
+        });
+
+        rootView.findViewById(R.id.btnTopUp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(new TopUpFragment());
+            }
+        });
+
+        rootView.findViewById(R.id.btnScan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(new TransactionHistoryFragment());
+            }
+        });
     }
 
     private void setupNavigation() {
-        rootView.findViewById(R.id.tvSeeAll).setOnClickListener(v ->
-                navigateTo(new TransactionHistoryFragment()));
-        rootView.findViewById(R.id.ivNotifications).setOnClickListener(v ->
-                Toast.makeText(getContext(), "No new notifications", Toast.LENGTH_SHORT).show());
+        rootView.findViewById(R.id.tvSeeAll).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(new TransactionHistoryFragment());
+            }
+        });
+
+        rootView.findViewById(R.id.ivNotifications).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), getString(R.string.toast_no_notifications), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void navigateTo(Fragment fragment) {
@@ -251,8 +322,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
     private double getPrefsDouble(String key, double defaultValue) {
         return Double.longBitsToDouble(
                 prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
@@ -260,13 +329,19 @@ public class HomeFragment extends Fragment {
 
     private String getGreeting() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if (hour < 12) return "Good morning,";
-        if (hour < 17) return "Good afternoon,";
-        return "Good evening,";
+        if (hour < 12) {
+            return getString(R.string.greeting_morning);
+        }
+        if (hour < 17) {
+            return getString(R.string.greeting_afternoon);
+        }
+        return getString(R.string.greeting_evening);
     }
 
     private String capitalize(String s) {
-        if (s == null || s.isEmpty()) return s;
+        if (s == null || s.isEmpty()) {
+            return s;
+        }
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }

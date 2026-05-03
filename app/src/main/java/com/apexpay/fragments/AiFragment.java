@@ -1,6 +1,5 @@
 package com.apexpay.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +35,11 @@ import retrofit2.Response;
 
 public class AiFragment extends Fragment {
 
-    private RecyclerView  rvChat;
-    private ChatAdapter   chatAdapter;
-    private EditText      etInput;
-    private ImageButton   btnSend;
-    private LinearLayout  llTyping;
+    private RecyclerView rvChat;
+    private ChatAdapter chatAdapter;
+    private EditText etInput;
+    private ImageButton btnSend;
+    private LinearLayout llTyping;
     private DatabaseHelper db;
 
     @Nullable
@@ -56,48 +55,59 @@ public class AiFragment extends Fragment {
 
         db = new DatabaseHelper(requireContext());
 
-        rvChat   = view.findViewById(R.id.rvChat);
-        etInput  = view.findViewById(R.id.etAiInput);
-        btnSend  = view.findViewById(R.id.btnAiSend);
+        rvChat = view.findViewById(R.id.rvChat);
+        etInput = view.findViewById(R.id.etAiInput);
+        btnSend = view.findViewById(R.id.btnAiSend);
         llTyping = view.findViewById(R.id.llTyping);
 
         chatAdapter = new ChatAdapter();
         rvChat.setLayoutManager(new LinearLayoutManager(getContext()));
         rvChat.setAdapter(chatAdapter);
 
-        // Load history from SQLite
         chatAdapter.setMessages(db.getChatHistory());
         scrollToBottom();
 
-        btnSend.setOnClickListener(v -> sendMessage());
-
-        view.findViewById(R.id.btnClearChat).setOnClickListener(v -> {
-            db.clearChatHistory();
-            chatAdapter.setMessages(new ArrayList<>());
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
         });
 
-        view.findViewById(R.id.btnScanToInvest).setOnClickListener(v ->
+        view.findViewById(R.id.btnClearChat).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.clearChatHistory();
+                chatAdapter.setMessages(new ArrayList<>());
+            }
+        });
+
+        view.findViewById(R.id.btnScanToInvest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, new ScanToInvestFragment())
                         .addToBackStack(null)
-                        .commit());
+                        .commit();
+            }
+        });
     }
 
     private void sendMessage() {
         String query = etInput.getText().toString().trim();
-        if (query.isEmpty()) return;
+        if (query.isEmpty()) {
+            return;
+        }
 
         etInput.setText("");
 
-        // Save + display user message
         db.insertMessage(ChatMessage.ROLE_USER, query);
         chatAdapter.addMessage(new ChatMessage(ChatMessage.ROLE_USER, query));
         scrollToBottom();
 
         setTyping(true);
 
-        // Build messages list for API (last 20 messages for context)
         List<ChatMessage> history = db.getChatHistory();
         List<AiApiService.Message> apiMessages = new ArrayList<>();
         apiMessages.add(new AiApiService.Message("system", buildSystemPrompt()));
@@ -126,11 +136,18 @@ public class AiFragment extends Fragment {
                         } else {
                             String body = "";
                             try {
-                                if (response.errorBody() != null)
+                                if (response.errorBody() != null) {
                                     body = response.errorBody().string();
-                            } catch (IOException ignored) {}
-                            String err = "AI error " + response.code()
-                                    + (body.isEmpty() ? "" : ": " + body);
+                                }
+                            } catch (IOException ignored) {
+                            }
+                            String errSuffix;
+                            if (body.isEmpty()) {
+                                errSuffix = "";
+                            } else {
+                                errSuffix = ": " + body;
+                            }
+                            String err = getString(R.string.toast_ai_error_prefix) + response.code() + errSuffix;
                             chatAdapter.addMessage(new ChatMessage(ChatMessage.ROLE_AI, err));
                             scrollToBottom();
                         }
@@ -140,7 +157,7 @@ public class AiFragment extends Fragment {
                     public void onFailure(Call<AiApiService.ChatResponse> call, Throwable t) {
                         setTyping(false);
                         chatAdapter.addMessage(new ChatMessage(ChatMessage.ROLE_AI,
-                                "Connection failed: " + t.getMessage()));
+                                getString(R.string.toast_connection_failed_prefix) + t.getMessage()));
                         scrollToBottom();
                     }
                 });
@@ -150,23 +167,33 @@ public class AiFragment extends Fragment {
         StringBuilder sb = new StringBuilder();
         sb.append("You are ApexPay's AI Risk Analyst — a concise, data-driven financial advisor.\n\n");
 
-        // Inject live portfolio context
         List<Holding> holdings = db.getAllHoldings();
         if (!holdings.isEmpty()) {
             sb.append("User's Current Portfolio:\n");
-            double totalValue = 0, totalCost = 0;
+            double totalValue = 0;
+            double totalCost = 0;
             for (Holding h : holdings) {
                 Asset a = MarketDataService.getAsset(h.symbol);
-                double price = (a != null && a.price > 0) ? a.price : h.avgBuyPrice;
-                double val   = h.quantity * price;
-                double pnl   = val - h.quantity * h.avgBuyPrice;
-                totalValue  += val;
-                totalCost   += h.quantity * h.avgBuyPrice;
+                double price;
+                if (a != null && a.price > 0) {
+                    price = a.price;
+                } else {
+                    price = h.avgBuyPrice;
+                }
+                double val = h.quantity * price;
+                double pnl = val - h.quantity * h.avgBuyPrice;
+                totalValue += val;
+                totalCost += h.quantity * h.avgBuyPrice;
                 sb.append(String.format("  • %s (%s): %.4f units @ $%.2f avg buy, now $%.2f (P&L %+.2f)\n",
                         h.name, h.symbol, h.quantity, h.avgBuyPrice, price, pnl));
             }
             double portfolioPnl = totalValue - totalCost;
-            String pnlStr = (portfolioPnl >= 0 ? "+" : "-") + String.format("$%,.2f", Math.abs(portfolioPnl));
+            String pnlStr;
+            if (portfolioPnl >= 0) {
+                pnlStr = "+" + String.format("$%,.2f", Math.abs(portfolioPnl));
+            } else {
+                pnlStr = "-" + String.format("$%,.2f", Math.abs(portfolioPnl));
+            }
             sb.append(String.format("Total Portfolio: $%,.2f | P&L: %s\n\n", totalValue, pnlStr));
         } else {
             sb.append("User has no holdings yet.\n\n");
@@ -182,12 +209,21 @@ public class AiFragment extends Fragment {
     }
 
     private void setTyping(boolean on) {
-        if (llTyping != null) llTyping.setVisibility(on ? View.VISIBLE : View.GONE);
-        if (btnSend  != null) btnSend.setEnabled(!on);
+        if (llTyping != null) {
+            if (on) {
+                llTyping.setVisibility(View.VISIBLE);
+            } else {
+                llTyping.setVisibility(View.GONE);
+            }
+        }
+        if (btnSend != null) {
+            btnSend.setEnabled(!on);
+        }
     }
 
     private void scrollToBottom() {
-        if (chatAdapter.getItemCount() > 0)
+        if (chatAdapter.getItemCount() > 0) {
             rvChat.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
+        }
     }
 }

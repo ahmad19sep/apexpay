@@ -1,12 +1,12 @@
 package com.apexpay.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apexpay.R;
@@ -37,9 +37,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.tvTitle.setText(t.title);
         holder.tvSubtitle.setText(t.date);
         holder.tvAmount.setText(t.amount);
-        holder.tvAmount.setTextColor(t.isCredit
-                ? Color.parseColor("#2E7D32")
-                : Color.parseColor("#C62828"));
+        if (t.isCredit) {
+            holder.tvAmount.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.transaction_credit));
+        } else {
+            holder.tvAmount.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.transaction_debit));
+        }
     }
 
     @Override
@@ -52,10 +54,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvIcon     = itemView.findViewById(R.id.tvIcon);
-            tvTitle    = itemView.findViewById(R.id.tvTitle);
+            tvIcon = itemView.findViewById(R.id.tvIcon);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
             tvSubtitle = itemView.findViewById(R.id.tvSubtitle);
-            tvAmount   = itemView.findViewById(R.id.tvAmount);
+            tvAmount = itemView.findViewById(R.id.tvAmount);
         }
     }
 }

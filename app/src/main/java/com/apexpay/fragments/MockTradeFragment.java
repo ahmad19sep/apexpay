@@ -1,7 +1,6 @@
 package com.apexpay.fragments;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.apexpay.R;
 import com.apexpay.database.DatabaseHelper;
@@ -28,16 +28,16 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
     private static final String ARG_IS_BUY = "isBuy";
 
     private static final double FEE_NETWORK = 0.01;
-    private static final double FEE_SPREAD  = 0.0065;
+    private static final double FEE_SPREAD = 0.0065;
 
-    private Asset  asset;
+    private Asset asset;
     private boolean isBuy = true;
 
     private EditText etAmount;
-    private TextView tvFractionalShares, tvOrderValue, tvNetworkFee,
-            tvSpread, tvTotalDeducted, tvAvailableBalance;
+    private TextView tvFractionalShares, tvOrderValue, tvNetworkFee;
+    private TextView tvSpread, tvTotalDeducted, tvAvailableBalance;
     private TextView btnBuyTab, btnSellTab;
-    private Button   btnConfirm;
+    private Button btnConfirm;
 
     private DatabaseHelper db;
     private SharedPreferences prefs;
@@ -62,14 +62,27 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String symbol = getArguments() != null ? getArguments().getString(ARG_SYMBOL, "BTC") : "BTC";
-        isBuy         = getArguments() != null && getArguments().getBoolean(ARG_IS_BUY, true);
+        String symbol;
+        if (getArguments() != null) {
+            symbol = getArguments().getString(ARG_SYMBOL, "BTC");
+        } else {
+            symbol = "BTC";
+        }
 
-        asset  = MarketDataService.getAsset(symbol);
-        db     = new DatabaseHelper(requireContext());
-        prefs  = requireActivity().getSharedPreferences("ApexPayPrefs", android.content.Context.MODE_PRIVATE);
+        if (getArguments() != null) {
+            isBuy = getArguments().getBoolean(ARG_IS_BUY, true);
+        } else {
+            isBuy = true;
+        }
 
-        if (asset == null) { dismiss(); return; }
+        asset = MarketDataService.getAsset(symbol);
+        db = new DatabaseHelper(requireContext());
+        prefs = requireActivity().getSharedPreferences("ApexPayPrefs", android.content.Context.MODE_PRIVATE);
+
+        if (asset == null) {
+            dismiss();
+            return;
+        }
 
         bindViews(view);
         populateHeader();
@@ -79,74 +92,145 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
     }
 
     private void bindViews(View v) {
-        etAmount            = v.findViewById(R.id.etAmount);
-        tvFractionalShares  = v.findViewById(R.id.tvFractionalShares);
-        tvOrderValue        = v.findViewById(R.id.tvOrderValue);
-        tvNetworkFee        = v.findViewById(R.id.tvNetworkFee);
-        tvSpread            = v.findViewById(R.id.tvSpread);
-        tvTotalDeducted     = v.findViewById(R.id.tvTotalDeducted);
-        tvAvailableBalance  = v.findViewById(R.id.tvAvailableBalance);
-        btnBuyTab           = v.findViewById(R.id.btnBuyTab);
-        btnSellTab          = v.findViewById(R.id.btnSellTab);
-        btnConfirm          = v.findViewById(R.id.btnConfirmTrade);
+        etAmount = v.findViewById(R.id.etAmount);
+        tvFractionalShares = v.findViewById(R.id.tvFractionalShares);
+        tvOrderValue = v.findViewById(R.id.tvOrderValue);
+        tvNetworkFee = v.findViewById(R.id.tvNetworkFee);
+        tvSpread = v.findViewById(R.id.tvSpread);
+        tvTotalDeducted = v.findViewById(R.id.tvTotalDeducted);
+        tvAvailableBalance = v.findViewById(R.id.tvAvailableBalance);
+        btnBuyTab = v.findViewById(R.id.btnBuyTab);
+        btnSellTab = v.findViewById(R.id.btnSellTab);
+        btnConfirm = v.findViewById(R.id.btnConfirmTrade);
     }
 
     private void populateHeader() {
         View v = requireView();
-        TextView tvIcon   = v.findViewById(R.id.tvTradeIcon);
-        TextView tvName   = v.findViewById(R.id.tvTradeAssetName);
-        TextView tvPrice  = v.findViewById(R.id.tvTradePrice);
+        TextView tvIcon = v.findViewById(R.id.tvTradeIcon);
+        TextView tvName = v.findViewById(R.id.tvTradeAssetName);
+        TextView tvPrice = v.findViewById(R.id.tvTradePrice);
         TextView tvChange = v.findViewById(R.id.tvTradeChange);
 
-        String icon = asset.iconEmoji.isEmpty() ? asset.symbol.substring(0, 1) : asset.iconEmoji;
+        String icon;
+        if (asset.iconEmoji.isEmpty()) {
+            icon = asset.symbol.substring(0, 1);
+        } else {
+            icon = asset.iconEmoji;
+        }
+
         tvIcon.setText(icon);
         tvName.setText(asset.name + " (" + asset.symbol + ")");
         tvPrice.setText(String.format("$%,.2f per unit", asset.price));
+        tvChange.setText(String.format("%+.2f%%", asset.changePercent));
 
         boolean gain = asset.changePercent >= 0;
-        tvChange.setText(String.format("%+.2f%%", asset.changePercent));
-        tvChange.setTextColor(gain ? Color.parseColor("#00C896") : Color.parseColor("#FF5252"));
+        if (gain) {
+            tvChange.setTextColor(ContextCompat.getColor(requireContext(), R.color.gain_green));
+        } else {
+            tvChange.setTextColor(ContextCompat.getColor(requireContext(), R.color.error));
+        }
     }
 
     private void updateMode() {
         if (isBuy) {
             btnBuyTab.setBackgroundResource(R.drawable.bg_buy_btn);
-            btnBuyTab.setTextColor(Color.WHITE);
+            btnBuyTab.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
             btnSellTab.setBackgroundResource(R.drawable.bg_tab_inactive);
-            btnSellTab.setTextColor(Color.parseColor("#8892B0"));
+            btnSellTab.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             btnConfirm.setBackgroundResource(R.drawable.bg_confirm_btn);
-            btnConfirm.setText("Confirm Buy");
+            btnConfirm.setText(getString(R.string.confirm_buy));
         } else {
             btnSellTab.setBackgroundResource(R.drawable.bg_sell_btn);
-            btnSellTab.setTextColor(Color.WHITE);
+            btnSellTab.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
             btnBuyTab.setBackgroundResource(R.drawable.bg_tab_inactive);
-            btnBuyTab.setTextColor(Color.parseColor("#8892B0"));
+            btnBuyTab.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             btnConfirm.setBackgroundResource(R.drawable.bg_sell_btn);
-            btnConfirm.setText("Confirm Sell");
+            btnConfirm.setText(getString(R.string.confirm_sell));
         }
     }
 
     private void setupListeners(View v) {
-        btnBuyTab.setOnClickListener(x -> { isBuy = true;  updateMode(); recalculate(); });
-        btnSellTab.setOnClickListener(x -> { isBuy = false; updateMode(); recalculate(); });
-
-        etAmount.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override public void afterTextChanged(Editable s) { recalculate(); }
+        btnBuyTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                isBuy = true;
+                updateMode();
+                recalculate();
+            }
         });
 
-        // ± buttons (increment/decrement by $10)
-        v.findViewById(R.id.btnAmountMinus).setOnClickListener(x -> adjustAmount(-10));
-        v.findViewById(R.id.btnAmountPlus).setOnClickListener(x -> adjustAmount(10));
+        btnSellTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                isBuy = false;
+                updateMode();
+                recalculate();
+            }
+        });
 
-        // Quick % buttons
-        v.findViewById(R.id.btn25pct).setOnClickListener(x -> setAmountPct(0.25));
-        v.findViewById(R.id.btn50pct).setOnClickListener(x -> setAmountPct(0.50));
-        v.findViewById(R.id.btn75pct).setOnClickListener(x -> setAmountPct(0.75));
-        v.findViewById(R.id.btnMax).setOnClickListener(x -> setAmountMax());
+        etAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        btnConfirm.setOnClickListener(x -> executeTrade());
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                recalculate();
+            }
+        });
+
+        v.findViewById(R.id.btnAmountMinus).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                adjustAmount(-10);
+            }
+        });
+
+        v.findViewById(R.id.btnAmountPlus).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                adjustAmount(10);
+            }
+        });
+
+        v.findViewById(R.id.btn25pct).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                setAmountPct(0.25);
+            }
+        });
+
+        v.findViewById(R.id.btn50pct).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                setAmountPct(0.50);
+            }
+        });
+
+        v.findViewById(R.id.btn75pct).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                setAmountPct(0.75);
+            }
+        });
+
+        v.findViewById(R.id.btnMax).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                setAmountMax();
+            }
+        });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View x) {
+                executeTrade();
+            }
+        });
     }
 
     private void adjustAmount(double delta) {
@@ -158,28 +242,53 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
 
     private void setAmountPct(double pct) {
         double cash = getSimCash();
-        double val  = isBuy ? cash * pct : (db.getQuantity(asset.symbol) * asset.price * pct);
+        double val;
+        if (isBuy) {
+            val = cash * pct;
+        } else {
+            val = db.getQuantity(asset.symbol) * asset.price * pct;
+        }
         etAmount.setText(String.format("%.2f", val));
         etAmount.setSelection(etAmount.getText().length());
     }
 
     private void setAmountMax() {
-        double val = isBuy ? getSimCash() : db.getQuantity(asset.symbol) * asset.price;
+        double val;
+        if (isBuy) {
+            val = getSimCash();
+        } else {
+            val = db.getQuantity(asset.symbol) * asset.price;
+        }
         etAmount.setText(String.format("%.2f", val));
         etAmount.setSelection(etAmount.getText().length());
     }
 
     private void recalculate() {
         double orderValue = parseAmount();
-        double units      = asset.price > 0 ? orderValue / asset.price : 0;
-        double netFee     = orderValue * FEE_NETWORK;
-        double spread     = orderValue * FEE_SPREAD;
-        double total      = isBuy ? orderValue + netFee + spread
-                                  : orderValue - netFee - spread;
 
-        tvFractionalShares.setText(units < 1
-                ? String.format("%.6f %s", units, asset.symbol)
-                : String.format("%.4f %s", units, asset.symbol));
+        double units;
+        if (asset.price > 0) {
+            units = orderValue / asset.price;
+        } else {
+            units = 0;
+        }
+
+        double netFee = orderValue * FEE_NETWORK;
+        double spread = orderValue * FEE_SPREAD;
+
+        double total;
+        if (isBuy) {
+            total = orderValue + netFee + spread;
+        } else {
+            total = orderValue - netFee - spread;
+        }
+
+        if (units < 1) {
+            tvFractionalShares.setText(String.format("%.6f %s", units, asset.symbol));
+        } else {
+            tvFractionalShares.setText(String.format("%.4f %s", units, asset.symbol));
+        }
+
         tvOrderValue.setText(String.format("$%,.2f", orderValue));
         tvNetworkFee.setText(String.format("-$%,.2f", netFee));
         tvSpread.setText(String.format("-$%,.2f", spread));
@@ -190,19 +299,19 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
     private void executeTrade() {
         double orderValue = parseAmount();
         if (orderValue <= 0) {
-            Toast.makeText(getContext(), "Enter a valid amount", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_enter_valid_amount), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double units   = orderValue / asset.price;
-        double netFee  = orderValue * FEE_NETWORK;
-        double spread  = orderValue * FEE_SPREAD;
-        double cash    = getSimCash();
+        double units = orderValue / asset.price;
+        double netFee = orderValue * FEE_NETWORK;
+        double spread = orderValue * FEE_SPREAD;
+        double cash = getSimCash();
 
         if (isBuy) {
             double totalCost = orderValue + netFee + spread;
             if (totalCost > cash) {
-                Toast.makeText(getContext(), "Insufficient Sim Cash", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error_insufficient_sim_cash), Toast.LENGTH_SHORT).show();
                 return;
             }
             db.buyAsset(asset.symbol, asset.name, asset.type, units, asset.price);
@@ -221,7 +330,7 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
             }
             double proceeds = orderValue - netFee - spread;
             if (!db.sellAsset(asset.symbol, units)) {
-                Toast.makeText(getContext(), "Sell failed — insufficient holdings", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error_sell_failed), Toast.LENGTH_SHORT).show();
                 return;
             }
             setSimCash(cash + proceeds);
@@ -231,7 +340,6 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
                     Toast.LENGTH_LONG).show();
         }
 
-        // Notify parent to refresh via fragment result
         Bundle result = new Bundle();
         result.putBoolean("tradeCompleted", true);
         getParentFragmentManager().setFragmentResult("trade_request", result);
@@ -241,7 +349,10 @@ public class MockTradeFragment extends BottomSheetDialogFragment {
     private double parseAmount() {
         try {
             String s = etAmount.getText().toString().trim();
-            return s.isEmpty() ? 0 : Double.parseDouble(s);
+            if (s.isEmpty()) {
+                return 0;
+            }
+            return Double.parseDouble(s);
         } catch (NumberFormatException e) {
             return 0;
         }
