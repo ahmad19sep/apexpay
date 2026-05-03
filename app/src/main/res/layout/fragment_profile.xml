@@ -65,15 +65,45 @@
             android:paddingTop="8dp"
             android:paddingBottom="24dp">
 
-            <TextView
-                android:id="@+id/tvAvatar"
+            <FrameLayout
+                android:id="@+id/flAvatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:gravity="center"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_avatar_circle" />
+                android:clickable="true"
+                android:focusable="true">
+
+                <!-- Photo (shown when a photo has been set) -->
+                <ImageView
+                    android:id="@+id/ivProfilePhoto"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:clipToOutline="true"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:visibility="gone" />
+
+                <!-- Initials fallback (shown when no photo) -->
+                <TextView
+                    android:id="@+id/tvAvatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/bg_avatar_circle" />
+
+                <!-- Camera badge -->
+                <TextView
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom|end"
+                    android:gravity="center"
+                    android:text="📷"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_camera_badge" />
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/tvName"

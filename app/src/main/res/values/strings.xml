@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">ApexPay</string>
 
-    <!-- Navigation -->
     <string name="back">Back</string>
     <string name="send_money">Send Money</string>
     <string name="receive_money">Receive Money</string>
@@ -9,7 +8,6 @@
     <string name="transaction_history">Transaction History</string>
     <string name="see_all">See All</string>
 
-    <!-- Wallet -->
     <string name="available_balance">Available: %s</string>
     <string name="recipient">Recipient</string>
     <string name="enter_name_account">Enter name or account</string>
@@ -23,10 +21,127 @@
     <string name="payment_source">Payment Source</string>
     <string name="top_up_now">Top Up Now</string>
 
-    <!-- AI -->
     <string name="ai_assistant">AI Financial Assistant</string>
     <string name="ai_placeholder_msg">How can I help you with your finances today?</string>
     <string name="ai_insight_title">Smart Insight</string>
     <string name="ai_insight_msg">You spent 15% more on entertainment this week. Consider saving $50 to reach your monthly goal!</string>
 
+    <string name="error_email_required">Email is required</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_min_6_chars">Minimum 6 characters</string>
+    <string name="error_full_name_required">Full name is required</string>
+    <string name="error_passwords_no_match">Passwords do not match</string>
+    <string name="error_enter_recipient">Enter recipient name or account</string>
+    <string name="error_enter_amount">Enter amount</string>
+    <string name="error_invalid_amount">Invalid amount</string>
+    <string name="error_must_be_positive">Must be &gt; 0</string>
+    <string name="error_insufficient_balance">Insufficient balance</string>
+    <string name="error_enter_an_amount">Enter an amount</string>
+    <string name="error_name_empty">Name cannot be empty</string>
+    <string name="error_fill_all_fields">Fill all fields</string>
+    <string name="error_min_password_6">New password must be at least 6 characters</string>
+
+    <string name="toast_welcome_back">Welcome back!</string>
+    <string name="toast_biometric_not_recognised">Biometric not recognised. Try again.</string>
+    <string name="toast_auth_error_prefix">Auth error: </string>
+    <string name="toast_session_expired">Session expired — sign in with password once to re-enable biometric.</string>
+    <string name="toast_no_biometric_enrolled">No fingerprint/face enrolled. Go to device Settings → Security → Fingerprint.</string>
+    <string name="toast_biometric_not_available_prefix">Biometric not available on this device (code </string>
+    <string name="toast_biometric_not_available_suffix">)</string>
+    <string name="toast_account_created">Account created! Please login.</string>
+    <string name="toast_incoming_transfers">💰 You have incoming transfers!</string>
+    <string name="toast_transfer_sync_error_prefix">Transfer sync error: </string>
+    <string name="toast_transfer_record_failed_prefix">⚠ Transfer record failed: </string>
+    <string name="toast_account_number_copied">Account number copied</string>
+    <string name="toast_profile_updated">Profile updated</string>
+    <string name="toast_bank_management_soon">Bank account management coming soon</string>
+    <string name="toast_bank_linking_soon">Bank linking coming soon</string>
+    <string name="toast_notif_saved">Notification preferences saved</string>
+    <string name="toast_biometric_enabled">Biometric authentication enabled</string>
+    <string name="toast_biometric_disabled">Biometric authentication disabled</string>
+    <string name="toast_local_data_cleared">Local data cleared</string>
+    <string name="toast_password_updated">Password updated successfully</string>
+    <string name="toast_current_password_wrong">Current password incorrect</string>
+    <string name="toast_no_notifications">No new notifications</string>
+    <string name="toast_connection_failed_prefix">Connection failed: </string>
+    <string name="toast_ai_error_prefix">AI error </string>
+
+    <string name="dialog_title_login_failed">Login Failed</string>
+    <string name="dialog_title_registration_failed">Registration Failed</string>
+    <string name="dialog_btn_ok">OK</string>
+    <string name="dialog_title_confirm_transfer">Confirm Transfer</string>
+    <string name="dialog_btn_send">Send</string>
+    <string name="dialog_btn_cancel">Cancel</string>
+    <string name="dialog_title_confirm_topup">Confirm Top-Up</string>
+    <string name="dialog_btn_topup">Top Up</string>
+    <string name="dialog_title_edit_profile">Edit Profile Name</string>
+    <string name="dialog_msg_edit_profile">Enter your display name:</string>
+    <string name="dialog_btn_save">Save</string>
+    <string name="dialog_title_change_password">Change Password</string>
+    <string name="dialog_btn_update">Update</string>
+    <string name="dialog_title_linked_banks">Linked Bank Accounts</string>
+    <string name="dialog_btn_add_bank">Add Bank</string>
+    <string name="dialog_btn_close">Close</string>
+    <string name="dialog_title_notifications">Notifications</string>
+    <string name="dialog_title_biometric_pin">Biometric &amp; PIN</string>
+    <string name="dialog_title_privacy">Privacy &amp; Data</string>
+    <string name="dialog_msg_privacy">Apex Pay stores your financial data securely using:\n\n• SQLite for local transaction history and holdings\n• Firebase Authentication for secure login\n• Firebase Firestore for P2P transfer routing\n\nYour data is never sold or shared with third parties.</string>
+    <string name="dialog_btn_clear_local_data">Clear Local Data</string>
+    <string name="dialog_title_clear_local_data">Clear Local Data</string>
+    <string name="dialog_msg_clear_local_data">This will clear your local transaction history and chat messages. Wallet balance and holdings are preserved.</string>
+    <string name="dialog_btn_clear">Clear</string>
+    <string name="dialog_title_sign_out">Sign Out</string>
+    <string name="dialog_msg_sign_out">Are you sure you want to sign out of Apex Pay?</string>
+    <string name="dialog_btn_sign_out">Sign Out</string>
+
+    <string name="biometric_prompt_title">Apex Pay</string>
+    <string name="biometric_prompt_subtitle">Confirm your identity to continue</string>
+    <string name="biometric_prompt_negative">Use Password</string>
+
+    <string name="pin_title_create">Create PIN</string>
+    <string name="pin_subtitle_create">Choose a 4-digit PIN to secure your account</string>
+    <string name="pin_title_enter">Enter PIN</string>
+    <string name="pin_subtitle_enter">Enter your PIN to continue</string>
+    <string name="pin_title_confirm">Confirm PIN</string>
+    <string name="pin_subtitle_confirm">Re-enter your PIN to confirm</string>
+    <string name="pin_error_no_match">PINs don\'t match. Start over.</string>
+    <string name="pin_error_incorrect">Incorrect PIN. Try again.</string>
+
+    <string name="hint_current_password">Current password</string>
+    <string name="hint_new_password">New password (min 6 chars)</string>
+    <string name="hint_confirm_new_password">Confirm new password</string>
+
+    <string name="bank_hbl">HBL Bank ••3421</string>
+    <string name="bank_meezan">Meezan Bank ••7890</string>
+    <string name="bank_hbl_primary">HBL Bank  ••3421  (Primary)</string>
+    <string name="bank_meezan_full">Meezan Bank  ••7890</string>
+
+    <string name="notif_transfer_alerts">Transfer alerts</string>
+    <string name="notif_trade_confirmations">Trade confirmations</string>
+    <string name="notif_security_alerts">Security alerts</string>
+
+    <string name="biometric_option_change_pin">Change PIN</string>
+    <string name="biometric_status_enabled">Face ID / Fingerprint enabled</string>
+    <string name="biometric_status_disabled">Biometric disabled</string>
+
+    <string name="card_expiry">12/28</string>
+    <string name="card_account_mask_prefix">APX  ••••  ••••  </string>
+
+    <string name="freeze_card_label">❅  Freeze Card</string>
+    <string name="unfreeze_card_label">✓  Unfreeze Card</string>
+
+    <string name="no_data_chart">Make your first trade to see allocation</string>
+    <string name="portfolio_center_text">Portfolio</string>
+    <string name="loading_label">LOADING…</string>
+    <string name="live_label">LIVE</string>
+
+    <string name="greeting_morning">Good morning,</string>
+    <string name="greeting_afternoon">Good afternoon,</string>
+    <string name="greeting_evening">Good evening,</string>
+
+    <string name="confirm_buy">Confirm Buy</string>
+    <string name="confirm_sell">Confirm Sell</string>
+    <string name="error_enter_valid_amount">Enter a valid amount</string>
+    <string name="error_insufficient_sim_cash">Insufficient Sim Cash</string>
+    <string name="error_sell_failed">Sell failed — insufficient holdings</string>
 </resources>
