@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingBottom="24dp">
 
-        <!-- ── Header ────────────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
 
         </LinearLayout>
 
-        <!-- ── Stats cards ──────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             android:paddingHorizontal="16dp"
             android:layout_marginBottom="20dp">
 
-            <!-- Portfolio Value -->
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
 
         </LinearLayout>
 
-        <!-- ── Category tabs ─────────────────────────────────────────────── -->
+
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -257,7 +257,8 @@
 
         </HorizontalScrollView>
 
-        <!-- ── Asset list ─────────────────────────────────────────────────── -->
+
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -276,7 +277,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Holdings header ───────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -304,7 +305,7 @@
 
         </LinearLayout>
 
-        <!-- ── Analytics shortcut ───────────────────────────────────────────── -->
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -344,7 +345,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Holdings list -->
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

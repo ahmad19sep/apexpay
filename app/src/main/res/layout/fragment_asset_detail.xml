@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
-        <!-- ── Top bar ───────────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
 
         </LinearLayout>
 
-        <!-- ── Price block ───────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
 
         </LinearLayout>
 
-        <!-- ── Time range selector ───────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
 
         </LinearLayout>
 
-        <!-- ── Candlestick chart ─────────────────────────────────────────── -->
+
         <com.github.mikephil.charting.charts.CandleStickChart
             android:id="@+id/candlestickChart"
             android:layout_width="match_parent"
@@ -148,7 +148,7 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="4dp" />
 
-        <!-- ── Volume label ──────────────────────────────────────────────── -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp" />
 
-        <!-- ── Volume bar chart ──────────────────────────────────────────── -->
+
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/volumeBarChart"
             android:layout_width="match_parent"
@@ -168,7 +168,7 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="20dp" />
 
-        <!-- ── Market stats ──────────────────────────────────────────────── -->
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -232,7 +232,7 @@
 
                 </LinearLayout>
 
-                <!-- Row 3 (P/E only for stocks/ETFs) -->
+
                 <LinearLayout
                     android:id="@+id/rowPeRatio"
                     android:layout_width="match_parent"
@@ -255,7 +255,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Action buttons ────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -7,7 +7,7 @@
     android:padding="14dp"
     android:background="#131523">
 
-    <!-- Icon -->
+
     <TextView
         android:id="@+id/tvHoldingIcon"
         android:layout_width="46dp"
@@ -19,7 +19,7 @@
         android:background="@drawable/bg_asset_icon"
         android:layout_marginEnd="14dp" />
 
-    <!-- Symbol + quantity -->
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
 
     </LinearLayout>
 
-    <!-- Value + P&L -->
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

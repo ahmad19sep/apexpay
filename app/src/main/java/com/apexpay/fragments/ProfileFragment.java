@@ -454,7 +454,6 @@ public class ProfileFragment extends Fragment {
                 == BiometricManager.BIOMETRIC_SUCCESS;
 
         if (strongAvailable) {
-            // Fingerprint / Class-3 face: use Keystore key locked to biometric
             Cipher cipher;
             try {
                 cipher = BiometricHelper.getCipherForEncrypt();
@@ -569,7 +568,6 @@ public class ProfileFragment extends Fragment {
 
         String ivStr = prefs.getString("biometricIV", null);
         if (ivStr != null) {
-            // STRONG mode: use CryptoObject so the Keystore key is exercised
             Cipher cipher;
             try {
                 cipher = BiometricHelper.getCipherForDecrypt(BiometricHelper.ivFromBase64(ivStr));
@@ -586,7 +584,6 @@ public class ProfileFragment extends Fragment {
             new BiometricPrompt(requireActivity(), ContextCompat.getMainExecutor(requireContext()), cb)
                     .authenticate(info, new BiometricPrompt.CryptoObject(cipher));
         } else {
-            // WEAK mode (face unlock): simple prompt, no CryptoObject
             BiometricPrompt.PromptInfo info = new BiometricPrompt.PromptInfo.Builder()
                     .setTitle("Disable Biometric Login")
                     .setSubtitle("Verify your identity to disable")

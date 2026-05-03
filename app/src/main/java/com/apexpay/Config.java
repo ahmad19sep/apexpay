@@ -2,8 +2,6 @@ package com.apexpay;
 
 public class Config
 {
-    // --- API KEYS ---
-    // Finnhub (stocks/ETFs): https://finnhub.io/
     public static final String FINNHUB_API_KEY = "d7qr5b9r01qudmin88dgd7qr5b9r01qudmin88e0";
 
 
@@ -11,8 +9,7 @@ public class Config
 
 
 
-    public static final String GROK_API_KEY = ""
-    // Model — llama-3.3-70b-versatile is free and very capable on Groq
+    public static final String GROK_API_KEY = BuildConfig.GROQ_API_KEY;
     public static final String GROK_MODEL = "llama-3.3-70b-versatile";
 
 

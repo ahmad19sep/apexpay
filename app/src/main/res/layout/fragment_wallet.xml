@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingBottom="24dp">
 
-        <!-- ── Header ──────────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
 
         </LinearLayout>
 
-        <!-- ── Virtual Card ─────────────────────────────────────────────── -->
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:background="@drawable/bg_virtual_card"
                 android:padding="22dp">
 
-                <!-- Top row: APEX PAY branding + Active badge -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
 
                 </LinearLayout>
 
-                <!-- Masked account number -->
+
                 <TextView
                     android:id="@+id/tvAccountNumber"
                     android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                     android:textColor="#B0FFFFFF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Balance -->
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                     android:background="#33FFFFFF"
                     android:layout_marginBottom="14dp" />
 
-                <!-- Holder + Expiry row -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Quick Actions row ──────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -305,7 +305,7 @@
 
         </LinearLayout>
 
-        <!-- ── Quick Send Contacts ───────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -340,7 +340,7 @@
             android:paddingHorizontal="16dp"
             android:nestedScrollingEnabled="false" />
 
-        <!-- ── Subscriptions ─────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -400,7 +400,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Recent Activity ───────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

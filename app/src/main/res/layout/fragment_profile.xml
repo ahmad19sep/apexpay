@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
-        <!-- ── Top bar ─────────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
 
         </LinearLayout>
 
-        <!-- ── Avatar + Name + Email ──────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                 android:clickable="true"
                 android:focusable="true">
 
-                <!-- Photo (shown when a photo has been set) -->
+
                 <ImageView
                     android:id="@+id/ivProfilePhoto"
                     android:layout_width="80dp"
@@ -82,7 +82,7 @@
                     android:background="@drawable/bg_avatar_circle"
                     android:visibility="gone" />
 
-                <!-- Initials fallback (shown when no photo) -->
+
                 <TextView
                     android:id="@+id/tvAvatar"
                     android:layout_width="80dp"
@@ -93,7 +93,7 @@
                     android:textColor="#FFFFFF"
                     android:background="@drawable/bg_avatar_circle" />
 
-                <!-- Camera badge -->
+
                 <TextView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
@@ -123,7 +123,7 @@
                 android:textSize="13sp"
                 android:textColor="#8892B0" />
 
-            <!-- Account Number row -->
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
 
         </LinearLayout>
 
-        <!-- ── Stats row ──────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -261,7 +261,7 @@
 
         </LinearLayout>
 
-        <!-- ── Account Settings section ──────────────────────────────── -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -287,7 +287,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Edit Profile -->
+
                 <LinearLayout
                     android:id="@+id/rowEditProfile"
                     android:layout_width="match_parent"
@@ -342,7 +342,7 @@
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="#22253A" android:layout_marginHorizontal="16dp" />
 
-                <!-- Change Password -->
+
                 <LinearLayout
                     android:id="@+id/rowChangePassword"
                     android:layout_width="match_parent"
@@ -397,7 +397,7 @@
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="#22253A" android:layout_marginHorizontal="16dp" />
 
-                <!-- Linked Bank Accounts -->
+
                 <LinearLayout
                     android:id="@+id/rowLinkedBanks"
                     android:layout_width="match_parent"
@@ -452,7 +452,7 @@
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="#22253A" android:layout_marginHorizontal="16dp" />
 
-                <!-- Notifications -->
+
                 <LinearLayout
                     android:id="@+id/rowNotifications"
                     android:layout_width="match_parent"
@@ -509,7 +509,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Security & Privacy section ──────────────────────────────── -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -535,7 +535,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Biometric & PIN -->
+
                 <LinearLayout
                     android:id="@+id/rowBiometric"
                     android:layout_width="match_parent"
@@ -591,7 +591,7 @@
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="#22253A" android:layout_marginHorizontal="16dp" />
 
-                <!-- Privacy & Data -->
+
                 <LinearLayout
                     android:id="@+id/rowPrivacy"
                     android:layout_width="match_parent"
@@ -647,7 +647,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Sign Out button ──────────────────────────────────────── -->
+
         <LinearLayout
             android:id="@+id/btnSignOut"
             android:layout_width="match_parent"

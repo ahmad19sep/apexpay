@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#0D0F1A">
 
-    <!-- Blue glow circle behind logo -->
+
     <View
         android:layout_width="220dp"
         android:layout_height="220dp"
@@ -12,7 +12,7 @@
         android:layout_marginBottom="60dp"
         android:background="@drawable/bg_splash_glow" />
 
-    <!-- Center content -->
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:gravity="center"
         android:layout_marginBottom="60dp">
 
-        <!-- Shield / Hex logo -->
+
         <TextView
             android:id="@+id/imgLogo"
             android:layout_width="100dp"
@@ -31,7 +31,7 @@
             android:textSize="78sp"
             android:textColor="#6366F1" />
 
-        <!-- App name -->
+
         <TextView
             android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             android:letterSpacing="0.18"
             android:textColor="#FFFFFF" />
 
-        <!-- Tagline -->
+
         <TextView
             android:id="@+id/tvTagline"
             android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
             android:textSize="14sp"
             android:textColor="#8892B0" />
 
-        <!-- Blue divider accent line -->
+
         <View
             android:layout_width="48dp"
             android:layout_height="2dp"
@@ -62,7 +62,7 @@
 
     </LinearLayout>
 
-    <!-- Bottom section: version + loading -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

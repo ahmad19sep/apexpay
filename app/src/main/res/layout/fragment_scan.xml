@@ -5,19 +5,19 @@
     android:layout_height="match_parent"
     android:background="@color/brokerage_bg">
 
-    <!-- Camera preview fills screen -->
+
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Dark overlay -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#55000000" />
 
-    <!-- Header bar -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
 
     </LinearLayout>
 
-    <!-- Scanning hint -->
+
     <TextView
         android:id="@+id/tvScanHint"
         android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp" />
 
-    <!-- Result card (hidden until detection) -->
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardScanResult"
         android:layout_width="match_parent"
@@ -144,7 +144,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Scan result text (hidden, for debugging) -->
+
     <TextView
         android:id="@+id/tvScanResult"
         android:layout_width="wrap_content"

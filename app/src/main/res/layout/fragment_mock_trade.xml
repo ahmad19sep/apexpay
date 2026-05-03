@@ -7,7 +7,7 @@
     android:background="#131523"
     android:paddingBottom="32dp">
 
-    <!-- Drag handle -->
+
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
@@ -16,7 +16,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="20dp" />
 
-    <!-- Asset header -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
 
     </LinearLayout>
 
-    <!-- Buy / Sell toggle -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
 
     </LinearLayout>
 
-    <!-- Amount input row -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
 
     </LinearLayout>
 
-    <!-- Quick pct buttons -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -213,40 +213,40 @@
                 android:textColor="#FFFFFF"
                 android:layout_marginBottom="12dp" />
 
-            <!-- Fractional shares -->
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Shares / Units" android:textSize="13sp" android:textColor="#8892B0"/>
                 <TextView android:id="@+id/tvFractionalShares" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0000" android:textSize="13sp" android:textStyle="bold" android:textColor="#FFFFFF"/>
             </LinearLayout>
 
-            <!-- Order value -->
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Order Value" android:textSize="13sp" android:textColor="#8892B0"/>
                 <TextView android:id="@+id/tvOrderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$0.00" android:textSize="13sp" android:textStyle="bold" android:textColor="#FFFFFF"/>
             </LinearLayout>
 
-            <!-- Network fee -->
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Network Fee (1%)" android:textSize="13sp" android:textColor="#8892B0"/>
                 <TextView android:id="@+id/tvNetworkFee" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$0.00" android:textSize="13sp" android:textColor="#FF5252"/>
             </LinearLayout>
 
-            <!-- Spread -->
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Spread (0.65%)" android:textSize="13sp" android:textColor="#8892B0"/>
                 <TextView android:id="@+id/tvSpread" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$0.00" android:textSize="13sp" android:textColor="#FF5252"/>
             </LinearLayout>
 
-            <!-- Divider -->
+
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#22253A" android:layout_marginBottom="12dp"/>
 
-            <!-- Total -->
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Total" android:textSize="14sp" android:textStyle="bold" android:textColor="#FFFFFF"/>
                 <TextView android:id="@+id/tvTotalDeducted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="#FFFFFF"/>
             </LinearLayout>
 
-            <!-- Available balance -->
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Available Balance" android:textSize="13sp" android:textColor="#8892B0"/>
                 <TextView android:id="@+id/tvAvailableBalance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$0.00" android:textSize="13sp" android:textColor="#00C896"/>
@@ -256,7 +256,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Confirm button -->
+
     <Button
         android:id="@+id/btnConfirmTrade"
         android:layout_width="match_parent"
@@ -270,12 +270,12 @@
         android:background="@drawable/bg_confirm_btn"
         android:stateListAnimator="@null" />
 
-    <!-- Disclaimer -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Simulated only. No real assets are purchased. Apex Pay uses mock execution for educational purposes."
+        android:text="@string/simulated_only_no_real"
         android:textSize="10sp"
         android:textColor="#44FFFFFF"
         android:paddingHorizontal="20dp" />

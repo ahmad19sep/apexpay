@@ -23,7 +23,6 @@ public class MarketDataService {
         void onDataChanged();
     }
 
-    // CoinGecko coin IDs matching our crypto symbols
     private static final Map<String, String> COIN_IDS = new HashMap<String, String>() {{
         put("BTC",  "bitcoin");
         put("ETH",  "ethereum");
@@ -39,8 +38,6 @@ public class MarketDataService {
     private static OnDataChangedListener sListener;
 
     public static void setListener(OnDataChangedListener l) { sListener = l; }
-
-    // ── Public accessors ──────────────────────────────────────────────────────
 
     public static synchronized List<Asset> getAllAssets() {
         if (sAssets == null) init();
@@ -69,12 +66,6 @@ public class MarketDataService {
         return sorted.subList(0, Math.min(10, sorted.size()));
     }
 
-    // ── Live price fetch (call this instead of the old refreshMarketData) ─────
-
-    /**
-     * Fetches live prices from Finnhub (stocks/ETFs) and CoinGecko (crypto).
-     * Calls {@code onComplete} on a background thread once all calls finish.
-     */
     public static void fetchLivePrices(Runnable onComplete) {
         if (sAssets == null) init();
 
@@ -94,7 +85,6 @@ public class MarketDataService {
             if (done.incrementAndGet() >= total && onComplete != null) onComplete.run();
         };
 
-        // ── Stocks + ETFs from Finnhub ─────────────────────────────────────
         for (Asset asset : stocks) {
             NetworkClient.getMarketApi()
                     .getQuote(asset.symbol, Config.FINNHUB_API_KEY)
@@ -117,7 +107,6 @@ public class MarketDataService {
                     });
         }
 
-        // ── Crypto batch from CoinGecko ───────────────────────────────────
         if (!cryptos.isEmpty()) {
             StringBuilder ids = new StringBuilder();
             for (Asset c : cryptos) {
@@ -158,8 +147,6 @@ public class MarketDataService {
         }
     }
 
-    // ── Candle data (generated, anchored to live price) ───────────────────────
-
     public static List<CandlePoint> getCandleData(String symbol, int days) {
         Asset asset = getAsset(symbol);
         double base = asset != null && asset.price > 0 ? asset.price : 100.0;
@@ -198,8 +185,6 @@ public class MarketDataService {
         }
         return list;
     }
-
-    // ── Asset catalog (prices start at 0, filled by fetchLivePrices) ──────────
 
     private static synchronized void init() {
         sAssets = new ArrayList<>();

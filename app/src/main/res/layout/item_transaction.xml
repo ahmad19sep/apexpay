@@ -7,7 +7,7 @@
     android:paddingTop="12dp"
     android:paddingBottom="12dp">
 
-    <!-- Icon circle -->
+
     <TextView
         android:id="@+id/tvIcon"
         android:layout_width="44dp"
@@ -17,7 +17,7 @@
         android:background="@drawable/bg_transaction_icon"
         android:layout_marginEnd="14dp" />
 
-    <!-- Title + Subtitle -->
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
 
     </LinearLayout>
 
-    <!-- Amount -->
+
     <TextView
         android:id="@+id/tvAmount"
         android:layout_width="wrap_content"

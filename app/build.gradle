@@ -3,6 +3,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def localProps = new Properties()
+localProps.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     namespace 'com.apexpay'
     compileSdk {
@@ -17,6 +20,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "GROQ_API_KEY", "\"${localProps['GROQ_API_KEY']}\""
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
@@ -59,6 +67,7 @@ dependencies {
 
     implementation 'com.google.mlkit:face-detection:16.1.7'
     implementation 'com.google.mlkit:image-labeling:17.0.9'
+    implementation libs.biometric
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

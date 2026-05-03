@@ -144,4 +144,5 @@
     <string name="error_enter_valid_amount">Enter a valid amount</string>
     <string name="error_insufficient_sim_cash">Insufficient Sim Cash</string>
     <string name="error_sell_failed">Sell failed — insufficient holdings</string>
+    <string name="simulated_only_no_real">Simulated only. No real assets are purchased. Apex Pay uses mock execution for educational purposes.</string>
 </resources>

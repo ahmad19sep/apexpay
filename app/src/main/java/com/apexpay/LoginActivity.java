@@ -131,7 +131,6 @@ public class LoginActivity extends AppCompatActivity {
         String storedEmail = prefs.getString("biometricEmail", null);
 
         if (storedEmail == null) {
-            // No enrollment data at all — clear old flag and ask to re-enable
             prefs.edit().putBoolean("biometricEnabled", false).apply();
             llBiometricSection.setVisibility(View.GONE);
             Toast.makeText(this, "Please re-enable biometric login in your profile.",
@@ -146,11 +145,9 @@ public class LoginActivity extends AppCompatActivity {
                 String emailToVerify;
                 try {
                     if (result.getCryptoObject() != null) {
-                        // STRONG mode: decrypt stored email
                         emailToVerify = BiometricHelper.decryptFromBase64(
                                 result.getCryptoObject().getCipher(), storedEmail);
                     } else {
-                        // WEAK mode: email stored as plaintext
                         emailToVerify = storedEmail;
                     }
                 } catch (Exception e) {
@@ -195,7 +192,6 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButtonText(getString(R.string.biometric_prompt_negative));
 
         if (ivStr != null) {
-            // STRONG mode: fingerprint / Class-3 face — use Keystore CryptoObject
             Cipher cipher;
             try {
                 cipher = BiometricHelper.getCipherForDecrypt(BiometricHelper.ivFromBase64(ivStr));
@@ -217,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
                     infoBuilder.setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG).build(),
                     new BiometricPrompt.CryptoObject(cipher));
         } else {
-            // WEAK mode: face unlock (Class-2) — no CryptoObject
             BiometricManager bm = BiometricManager.from(this);
             if (bm.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
                     != BiometricManager.BIOMETRIC_SUCCESS) {

@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingBottom="24dp">
 
-        <!-- ── Header ──────────────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
 
         </LinearLayout>
 
-        <!-- ── Summary cards ───────────────────────────────────────────────── -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
 
         </LinearLayout>
 
-        <!-- ── Donut Chart ─────────────────────────────────────────────────── -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Cash Flow Bar Chart ─────────────────────────────────────────── -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

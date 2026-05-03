@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <!-- ── Header ──────────────────────────────────────────────────────────── -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
 
         </LinearLayout>
 
-        <!-- Scan to Invest button -->
+
         <ImageButton
             android:id="@+id/btnScanToInvest"
             android:layout_width="40dp"
@@ -52,7 +52,7 @@
             app:tint="#6366F1"
             android:contentDescription="Scan to Invest" />
 
-        <!-- Clear chat button -->
+
         <TextView
             android:id="@+id/btnClearChat"
             android:layout_width="wrap_content"
@@ -66,13 +66,13 @@
 
     </LinearLayout>
 
-    <!-- Divider -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#1E2035" />
 
-    <!-- ── Chat RecyclerView ────────────────────────────────────────────────── -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
         android:paddingBottom="8dp"
         android:clipToPadding="false" />
 
-    <!-- ── Typing indicator ─────────────────────────────────────────────────── -->
+
     <LinearLayout
         android:id="@+id/llTyping"
         android:layout_width="match_parent"
@@ -110,7 +110,7 @@
 
     </LinearLayout>
 
-    <!-- ── Input bar ────────────────────────────────────────────────────────── -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
