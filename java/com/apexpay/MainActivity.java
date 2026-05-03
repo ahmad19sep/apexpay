@@ -1,0 +1,87 @@
+package com.apexpay;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.apexpay.fragments.AiFragment;
+import com.apexpay.fragments.BrokerageFragment;
+import com.apexpay.fragments.HomeFragment;
+import com.apexpay.fragments.ProfileFragment;
+import com.apexpay.fragments.WalletFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
+import android.view.MenuItem;
+
+public class MainActivity extends AppCompatActivity {
+
+    private String userEmail;
+    private BottomNavigationView bottomNav;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        userEmail = getIntent().getStringExtra("userEmail");
+        if (userEmail == null) {
+            SharedPreferences prefs = getSharedPreferences("ApexPayPrefs", MODE_PRIVATE);
+            userEmail = prefs.getString("userEmail", "");
+        }
+
+        final String finalUserEmail = userEmail;
+        bottomNav = findViewById(R.id.bottom_nav);
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int id = item.getItemId();
+                Fragment fragment = null;
+
+                if (id == R.id.nav_home) {
+                    fragment = HomeFragment.newInstance(finalUserEmail);
+                } else if (id == R.id.nav_wallet) {
+                    fragment = new WalletFragment();
+                } else if (id == R.id.nav_brokerage) {
+                    fragment = new BrokerageFragment();
+                } else if (id == R.id.nav_ai) {
+                    fragment = new AiFragment();
+                } else if (id == R.id.nav_profile) {
+                    fragment = ProfileFragment.newInstance(finalUserEmail);
+                }
+
+                if (fragment != null) {
+                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    loadFragment(fragment, false);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        if (savedInstanceState == null) {
+            loadFragment(HomeFragment.newInstance(userEmail), false);
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
+    }
+
+    public boolean loadFragment(Fragment fragment, boolean addToBackStack) {
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment);
+
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
+        return true;
+    }
+
+    public boolean loadFragment(Fragment fragment) {
+        return loadFragment(fragment, true);
+    }
+}
